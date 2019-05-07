@@ -1,0 +1,241 @@
+{
+    "message": "",
+    "exception": "Symfony\\Component\\HttpKernel\\Exception\\MethodNotAllowedHttpException",
+    "file": "C:\\Users\\Doroteo\\Desktop\\Diplomski\\BoardnetAPI\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\RouteCollection.php",
+    "line": 255,
+    "trace": [
+        {
+            "file": "C:\\Users\\Doroteo\\Desktop\\Diplomski\\BoardnetAPI\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\RouteCollection.php",
+            "line": 242,
+            "function": "methodNotAllowed",
+            "class": "Illuminate\\Routing\\RouteCollection",
+            "type": "->"
+        },
+        {
+            "file": "C:\\Users\\Doroteo\\Desktop\\Diplomski\\BoardnetAPI\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\RouteCollection.php",
+            "line": 176,
+            "function": "getRouteForMethods",
+            "class": "Illuminate\\Routing\\RouteCollection",
+            "type": "->"
+        },
+        {
+            "file": "C:\\Users\\Doroteo\\Desktop\\Diplomski\\BoardnetAPI\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php",
+            "line": 619,
+            "function": "match",
+            "class": "Illuminate\\Routing\\RouteCollection",
+            "type": "->"
+        },
+        {
+            "file": "C:\\Users\\Doroteo\\Desktop\\Diplomski\\BoardnetAPI\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php",
+            "line": 608,
+            "function": "findRoute",
+            "class": "Illuminate\\Routing\\Router",
+            "type": "->"
+        },
+        {
+            "file": "C:\\Users\\Doroteo\\Desktop\\Diplomski\\BoardnetAPI\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php",
+            "line": 597,
+            "function": "dispatchToRoute",
+            "class": "Illuminate\\Routing\\Router",
+            "type": "->"
+        },
+        {
+            "file": "C:\\Users\\Doroteo\\Desktop\\Diplomski\\BoardnetAPI\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php",
+            "line": 176,
+            "function": "dispatch",
+            "class": "Illuminate\\Routing\\Router",
+            "type": "->"
+        },
+        {
+            "file": "C:\\Users\\Doroteo\\Desktop\\Diplomski\\BoardnetAPI\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Pipeline.php",
+            "line": 30,
+            "function": "Illuminate\\Foundation\\Http\\{closure}",
+            "class": "Illuminate\\Foundation\\Http\\Kernel",
+            "type": "->"
+        },
+        {
+            "file": "C:\\Users\\Doroteo\\Desktop\\Diplomski\\BoardnetAPI\\vendor\\fideloper\\proxy\\src\\TrustProxies.php",
+            "line": 57,
+            "function": "Illuminate\\Routing\\{closure}",
+            "class": "Illuminate\\Routing\\Pipeline",
+            "type": "->"
+        },
+        {
+            "file": "C:\\Users\\Doroteo\\Desktop\\Diplomski\\BoardnetAPI\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php",
+            "line": 151,
+            "function": "handle",
+            "class": "Fideloper\\Proxy\\TrustProxies",
+            "type": "->"
+        },
+        {
+            "file": "C:\\Users\\Doroteo\\Desktop\\Diplomski\\BoardnetAPI\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Pipeline.php",
+            "line": 53,
+            "function": "Illuminate\\Pipeline\\{closure}",
+            "class": "Illuminate\\Pipeline\\Pipeline",
+            "type": "->"
+        },
+        {
+            "file": "C:\\Users\\Doroteo\\Desktop\\Diplomski\\BoardnetAPI\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php",
+            "line": 31,
+            "function": "Illuminate\\Routing\\{closure}",
+            "class": "Illuminate\\Routing\\Pipeline",
+            "type": "->"
+        },
+        {
+            "file": "C:\\Users\\Doroteo\\Desktop\\Diplomski\\BoardnetAPI\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php",
+            "line": 151,
+            "function": "handle",
+            "class": "Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest",
+            "type": "->"
+        },
+        {
+            "file": "C:\\Users\\Doroteo\\Desktop\\Diplomski\\BoardnetAPI\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Pipeline.php",
+            "line": 53,
+            "function": "Illuminate\\Pipeline\\{closure}",
+            "class": "Illuminate\\Pipeline\\Pipeline",
+            "type": "->"
+        },
+        {
+            "file": "C:\\Users\\Doroteo\\Desktop\\Diplomski\\BoardnetAPI\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php",
+            "line": 31,
+            "function": "Illuminate\\Routing\\{closure}",
+            "class": "Illuminate\\Routing\\Pipeline",
+            "type": "->"
+        },
+        {
+            "file": "C:\\Users\\Doroteo\\Desktop\\Diplomski\\BoardnetAPI\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php",
+            "line": 151,
+            "function": "handle",
+            "class": "Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest",
+            "type": "->"
+        },
+        {
+            "file": "C:\\Users\\Doroteo\\Desktop\\Diplomski\\BoardnetAPI\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Pipeline.php",
+            "line": 53,
+            "function": "Illuminate\\Pipeline\\{closure}",
+            "class": "Illuminate\\Pipeline\\Pipeline",
+            "type": "->"
+        },
+        {
+            "file": "C:\\Users\\Doroteo\\Desktop\\Diplomski\\BoardnetAPI\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize.php",
+            "line": 27,
+            "function": "Illuminate\\Routing\\{closure}",
+            "class": "Illuminate\\Routing\\Pipeline",
+            "type": "->"
+        },
+        {
+            "file": "C:\\Users\\Doroteo\\Desktop\\Diplomski\\BoardnetAPI\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php",
+            "line": 151,
+            "function": "handle",
+            "class": "Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize",
+            "type": "->"
+        },
+        {
+            "file": "C:\\Users\\Doroteo\\Desktop\\Diplomski\\BoardnetAPI\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Pipeline.php",
+            "line": 53,
+            "function": "Illuminate\\Pipeline\\{closure}",
+            "class": "Illuminate\\Pipeline\\Pipeline",
+            "type": "->"
+        },
+        {
+            "file": "C:\\Users\\Doroteo\\Desktop\\Diplomski\\BoardnetAPI\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\CheckForMaintenanceMode.php",
+            "line": 62,
+            "function": "Illuminate\\Routing\\{closure}",
+            "class": "Illuminate\\Routing\\Pipeline",
+            "type": "->"
+        },
+        {
+            "file": "C:\\Users\\Doroteo\\Desktop\\Diplomski\\BoardnetAPI\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php",
+            "line": 151,
+            "function": "handle",
+            "class": "Illuminate\\Foundation\\Http\\Middleware\\CheckForMaintenanceMode",
+            "type": "->"
+        },
+        {
+            "file": "C:\\Users\\Doroteo\\Desktop\\Diplomski\\BoardnetAPI\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Pipeline.php",
+            "line": 53,
+            "function": "Illuminate\\Pipeline\\{closure}",
+            "class": "Illuminate\\Pipeline\\Pipeline",
+            "type": "->"
+        },
+        {
+            "file": "C:\\Users\\Doroteo\\Desktop\\Diplomski\\BoardnetAPI\\vendor\\barryvdh\\laravel-cors\\src\\HandlePreflight.php",
+            "line": 35,
+            "function": "Illuminate\\Routing\\{closure}",
+            "class": "Illuminate\\Routing\\Pipeline",
+            "type": "->"
+        },
+        {
+            "file": "C:\\Users\\Doroteo\\Desktop\\Diplomski\\BoardnetAPI\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php",
+            "line": 151,
+            "function": "handle",
+            "class": "Barryvdh\\Cors\\HandlePreflight",
+            "type": "->"
+        },
+        {
+            "file": "C:\\Users\\Doroteo\\Desktop\\Diplomski\\BoardnetAPI\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Pipeline.php",
+            "line": 53,
+            "function": "Illuminate\\Pipeline\\{closure}",
+            "class": "Illuminate\\Pipeline\\Pipeline",
+            "type": "->"
+        },
+        {
+            "file": "C:\\Users\\Doroteo\\Desktop\\Diplomski\\BoardnetAPI\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php",
+            "line": 104,
+            "function": "Illuminate\\Routing\\{closure}",
+            "class": "Illuminate\\Routing\\Pipeline",
+            "type": "->"
+        },
+        {
+            "file": "C:\\Users\\Doroteo\\Desktop\\Diplomski\\BoardnetAPI\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php",
+            "line": 151,
+            "function": "then",
+            "class": "Illuminate\\Pipeline\\Pipeline",
+            "type": "->"
+        },
+        {
+            "file": "C:\\Users\\Doroteo\\Desktop\\Diplomski\\BoardnetAPI\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php",
+            "line": 116,
+            "function": "sendRequestThroughRouter",
+            "class": "Illuminate\\Foundation\\Http\\Kernel",
+            "type": "->"
+        },
+        {
+            "file": "C:\\Users\\Doroteo\\Desktop\\Diplomski\\BoardnetAPI\\public\\index.php",
+            "line": 55,
+            "function": "handle",
+            "class": "Illuminate\\Foundation\\Http\\Kernel",
+            "type": "->"
+        },
+        {
+            "file": "C:\\Users\\Doroteo\\Desktop\\Diplomski\\BoardnetAPI\\server.php",
+            "line": 21,
+            "function": "require_once"
+        }
+    ],
+    "debug": {
+        "database": {
+            "total": 0,
+            "items": []
+        },
+        "cache": {
+            "hit": {
+                "keys": [],
+                "total": 0
+            },
+            "miss": {
+                "keys": [],
+                "total": 0
+            },
+            "write": {
+                "keys": [],
+                "total": 0
+            },
+            "forget": {
+                "keys": [],
+                "total": 0
+            }
+        },
+        "profiling": []
+    }
+}
