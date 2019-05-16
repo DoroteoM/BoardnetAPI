@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests;
 use JWTAuth;
 use JWTAuthException;
-use App\User;
+use App\Models\User;
 use Validator;
 
 class ApiAuthController extends Controller

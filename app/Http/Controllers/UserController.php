@@ -2,21 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use Illuminate\Http\Request;
-use App\User;
+use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
-    public function show_details ($username)
+    public function read ($username)
     {
         $details = User::where('username', $username)->first();
         return response()->json(['success' => true, 'result' => $details]);
     }
 
-    public function save_details (Request $request, $user_id)
+    public function update (Request $request, $user_id)
     {
-        $errors = $this->validator($request->all(), $user_id)->errors();
+        $errors = $this->dataValidator($request->all(), $user_id)->errors();
 
         if(count($errors))
         {
@@ -36,7 +37,19 @@ class UserController extends Controller
         return response(['success' => true, 'result' => $user], 200);
     }
 
-    protected function validator(array $data, $user_id)
+    public function delete ($user_id)
+    {
+        $user = User::find($user_id);
+
+        if ($user == null)
+            return response(['success' => false, 'result' => "User does not exist"], 200);
+
+        $user->delete();
+
+        return response(['success' => true, 'result' => ['deleted' => $user->username]], 200);
+    }
+
+    protected function dataValidator(array $data, $user_id)
     {
         return Validator::make($data, [
             'username' => 'required|string|max:255|unique:users,username,'.$user_id,

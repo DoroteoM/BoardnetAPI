@@ -33,8 +33,9 @@ Route::group(['middleware' => ['api','cors']], function () {
     Route::post('auth/login', 'Auth\ApiAuthController@login');
 
     //user
-    Route::get('user/details/{username}', 'UserController@show_details');
-    Route::put('user/details/{user_id}', 'UserController@save_details');
+    Route::get('users/{username}', 'UserController@read');
+    Route::put('users/{user_id}', 'UserController@update');
+    Route::delete('users/{user_id}', 'UserController@delete');
 
     //game
     Route::get('games/library/addgames/user/{username}', 'GameController@add_games_from_library');
