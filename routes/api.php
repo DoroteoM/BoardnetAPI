@@ -14,18 +14,6 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
-Route::middleware('api')->get('/hello', function () {
-    return json_encode(['message' => 'hello world']);
-});
-
-Route::middleware('api')->get('/hello2/{hello}', function ($hello) {
-    return json_encode(['message' => $hello]);
-});
-
 Route::group(['middleware' => ['api','cors']], function () {
 
     //registracija i login
@@ -38,13 +26,12 @@ Route::group(['middleware' => ['api','cors']], function () {
     Route::delete('users/{user_id}', 'UserController@delete');
 
     //game
-    Route::get('games/library/addgames/user/{username}', 'GameController@add_games_from_library');
+    Route::post('games/bgg', 'GameController@createFromLibrary');
+    Route::get('games', 'GameController@readAll');
+    Route::get('games/{game_id}', 'GameController@read');
+    Route::delete('games/{game_id}', 'GameController@delete');
 
     //test
     //Route::post('auth/gettoken', 'Auth\ApiAuthController@authenticate');//I can get token!
     //Route::post('auth/getuser', 'Auth\ApiAuthController@getUser');// I can't get user
-    Route::get('test/library', 'TestController@test_library');
-    Route::get('test/hello', 'TestController@hello');
-    Route::post('test/hello1', 'TestController@hello1');
-    Route::post('test/hello2', 'TestController@hello2');
 });
