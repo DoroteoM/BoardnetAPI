@@ -15,31 +15,31 @@ class UserController extends Controller
         return response()->json(['success' => true, 'result' => $details]);
     }
 
-    public function update (Request $request, $user_id)
+    public function update (Request $request, $userId)
     {
-        $errors = $this->dataValidator($request->all(), $user_id)->errors();
+        $errors = $this->dataValidator($request->all(), $userId)->errors();
 
         if(count($errors))
         {
             return response(['response' => false, 'result' => $errors], 200); //! Na 401 aplkacija ne cita uspjesno odgovor
         }
 
-        $user = User::find($user_id);
+        $user = User::find($userId);
 
         $user->username = $request->get("username");
         $user->email = $request->get("email");
         $user->name = $request->get("name", null);
         $user->surname = $request->get("surname", null);
-        $user->date_of_birth = $request->get("date_of_birth", null);
-        $user->bgg_username = $request->get("bgg_username", null);
+        $user->dateOfBirth = $request->get("dateOfBirth", null);
+        $user->bggUsername = $request->get("bggUsername", null);
 
         $user->save();
         return response(['success' => true, 'result' => $user], 200);
     }
 
-    public function delete ($user_id)
+    public function delete ($userId)
     {
-        $user = User::find($user_id);
+        $user = User::find($userId);
 
         if ($user == null)
             return response(['success' => false, 'result' => "User does not exist"], 200);
@@ -49,12 +49,12 @@ class UserController extends Controller
         return response(['success' => true, 'result' => ['deleted' => $user->username]], 200);
     }
 
-    protected function dataValidator(array $data, $user_id)
+    protected function dataValidator(array $data, $userId)
     {
         return Validator::make($data, [
-            'username' => 'required|string|max:255|unique:users,username,'.$user_id,
-            'email' => 'required|string|email|max:255|unique:users,email,'.$user_id,
-            'date_of_birth' => 'date|date_format:Y-m-d|after:1900-01-01|before:today'
+            'username' => 'required|string|max:255|unique:users,username,'.$userId,
+            'email' => 'required|string|email|max:255|unique:users,email,'.$userId,
+            'dateOfBirth' => 'date|date_format:Y-m-d|after:1900-01-01|before:today'
         ]);
     }
 }

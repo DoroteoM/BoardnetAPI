@@ -22,14 +22,15 @@ Route::group(['middleware' => ['api','cors']], function () {
 
     //user
     Route::get('users/{username}', 'UserController@read');
-    Route::put('users/{user_id}', 'UserController@update');
-    Route::delete('users/{user_id}', 'UserController@delete');
+    Route::put('users/{userId}', 'UserController@update');
+    Route::delete('users/{userId}', 'UserController@delete');
 
     //game
     Route::post('games/bgg', 'GameController@createFromLibrary');
     Route::get('games', 'GameController@readAll');
-    Route::get('games/{game_id}', 'GameController@read');
-    Route::delete('games/{game_id}', 'GameController@delete');
+    Route::get('games/{gameId}', 'GameController@read');
+    Route::put('games/{gameId}', 'GameController@update');
+    Route::delete('games/{gameId}', 'GameController@delete');
 
     //test
     //Route::post('auth/gettoken', 'Auth\ApiAuthController@authenticate');//I can get token!

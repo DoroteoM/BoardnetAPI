@@ -13,17 +13,47 @@ class GameController extends Controller
         return response(['success' => true, 'result' => Game::all()], 200);
     }
 
-    public function read($game_id)
+    public function read($gameId)
     {
-        $game = Game::where('gameId', '=', $game_id)->first();
+        $game = Game::where('gameId', '=', $gameId)->first();
         if ($game == null)
             return response(['success' => false, 'result' => 'There is no game with this id'], 200);
         return response(['success' => true, 'result' => $game], 200);
     }
 
-    public function delete($game_id)
+    public function update($gameId)
     {
-        $game = Game::where('gameId', '=', $game_id)->first();
+        try
+        {
+            $url = "https://bgg-json.azurewebsites.net/thing/".$gameId;
+            $json = file_get_contents($url);
+            $bggGame = json_decode($json, true);
+            if ($bggGame == null)
+                return response(['success' => false, 'result' => 'This game does not exist on Board Game Geek']);
+            $game = Game::where('gameId', '=', $gameId)->first();
+            $game->name = $bggGame['name'];
+            $game->image = $bggGame['image'];
+            $game->thumbnail = $bggGame['thumbnail'];
+            $game->averageRating = $bggGame['averageRating'];
+            $game->rank = $bggGame['rank'];
+            $game->yearPublished = $bggGame['yearPublished'];
+            $game->minPlayers = $bggGame['minPlayers'];
+            $game->maxPlayers = $bggGame['maxPlayers'];
+            $game->playingTime = $bggGame['playingTime'];
+
+            $game->save();
+            return response(['success' => true, 'result' => $game], 200);
+        }
+        catch (Exception $e)
+        {
+            return response()->json(['success' => false, 'result' => $e->getMessage()]);
+        }
+    }
+
+
+    public function delete($gameId)
+    {
+        $game = Game::where('gameId', '=', $gameId)->first();
         if ($game == null)
             return response(['success' => false, 'result' => 'There is no game with this id'], 200);
         try {
@@ -37,8 +67,8 @@ class GameController extends Controller
     {
         try
         {
-            $bgg_username = $request->get("bgg_username") ? $request->get("bgg_username") : 'nemo';
-            $url = "https://bgg-json.azurewebsites.net/collection/".$bgg_username;
+            $bggUsername = $request->get("bggUsername") ? $request->get("bggUsername") : 'nemo';
+            $url = "https://bgg-json.azurewebsites.net/collection/".$bggUsername;
             $json = file_get_contents($url);
             $list = json_decode($json, true);
             if ($list == null)
