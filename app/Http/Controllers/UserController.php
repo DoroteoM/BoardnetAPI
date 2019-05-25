@@ -11,28 +11,27 @@ class UserController extends Controller
 {
     public function read ($username)
     {
-        $details = User::where('username', $username)->first();
-        return response()->json(['success' => true, 'result' => $details]);
+        $user = User::where('username', $username)->first();
+        if ($user == null)
+            return response()->json(['success' => false, 'result' => "User does not exist."]);
+        return response()->json(['success' => true, 'result' => $user]);
     }
 
     public function update (Request $request, $userId)
     {
-        $errors = $this->dataValidator($request->all(), $userId)->errors();
-
+        $errors = $this->userDataValidator($request->all(), $userId)->errors();
         if(count($errors))
         {
             return response(['response' => false, 'result' => $errors], 200); //! Na 401 aplkacija ne cita uspjesno odgovor
         }
 
         $user = User::find($userId);
-
         $user->username = $request->get("username");
         $user->email = $request->get("email");
         $user->name = $request->get("name", null);
         $user->surname = $request->get("surname", null);
         $user->dateOfBirth = $request->get("dateOfBirth", null);
         $user->bggUsername = $request->get("bggUsername", null);
-
         $user->save();
         return response(['success' => true, 'result' => $user], 200);
     }
@@ -49,7 +48,7 @@ class UserController extends Controller
         return response(['success' => true, 'result' => ['deleted' => $user->username]], 200);
     }
 
-    protected function dataValidator(array $data, $userId)
+    protected function userDataValidator(array $data, $userId)
     {
         return Validator::make($data, [
             'username' => 'required|string|max:255|unique:users,username,'.$userId,
