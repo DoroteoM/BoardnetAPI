@@ -13,35 +13,53 @@ class GameController extends Controller
         return response(['success' => true, 'result' => Game::all()], 200);
     }
 
-    public function read($gameId)
+    public function read($bggGameId)
     {
-        $game = Game::where('gameId', '=', $gameId)->first();
+        $game = Game::where('gameId', '=', $bggGameId)->first();
         if ($game == null)
             return response(['success' => false, 'result' => 'There is no game with this id'], 200);
         return response(['success' => true, 'result' => $game], 200);
     }
 
-    public function update($gameId)
+    public function update($bggGameId)
     {
         try
         {
-            $url = "https://bgg-json.azurewebsites.net/thing/".$gameId;
+            $url = "https://bgg-json.azurewebsites.net/thing/".$bggGameId;
             $json = file_get_contents($url);
             $bggGame = json_decode($json, true);
             if ($bggGame == null)
                 return response(['success' => false, 'result' => 'This game does not exist on Board Game Geek']);
-            $game = Game::where('gameId', '=', $gameId)->first();
-            $game->name = $bggGame['name'];
-            $game->image = $bggGame['image'];
-            $game->thumbnail = $bggGame['thumbnail'];
-            $game->averageRating = $bggGame['averageRating'];
-            $game->rank = $bggGame['rank'];
-            $game->yearPublished = $bggGame['yearPublished'];
-            $game->minPlayers = $bggGame['minPlayers'];
-            $game->maxPlayers = $bggGame['maxPlayers'];
-            $game->playingTime = $bggGame['playingTime'];
+            $game = Game::where('gameId', '=', $bggGameId)->first();
+            if ($game == null)
+            {
+                $game = Game::create([
+                    'gameId' => $bggGame['gameId'],
+                    'name' => $bggGame['name'],
+                    'image' => $bggGame['image'],
+                    'thumbnail' => $bggGame['thumbnail'],
+                    'averageRating' => $bggGame['averageRating'],
+                    'rank' => $bggGame['rank'],
+                    'yearPublished' => $bggGame['yearPublished'],
+                    'minPlayers' => $bggGame['minPlayers'],
+                    'maxPlayers' => $bggGame['maxPlayers'],
+                    'playingTime' => $bggGame['playingTime']
+                ]);
+            }
+            else
+            {
+                $game->name = $bggGame['name'];
+                $game->image = $bggGame['image'];
+                $game->thumbnail = $bggGame['thumbnail'];
+                $game->averageRating = $bggGame['averageRating'];
+                $game->rank = $bggGame['rank'];
+                $game->yearPublished = $bggGame['yearPublished'];
+                $game->minPlayers = $bggGame['minPlayers'];
+                $game->maxPlayers = $bggGame['maxPlayers'];
+                $game->playingTime = $bggGame['playingTime'];
+                $game->save();
+            }
 
-            $game->save();
             return response(['success' => true, 'result' => $game], 200);
         }
         catch (Exception $e)
@@ -51,9 +69,9 @@ class GameController extends Controller
     }
 
 
-    public function delete($gameId)
+    public function delete($bggGameId)
     {
-        $game = Game::where('gameId', '=', $gameId)->first();
+        $game = Game::where('gameId', '=', $bggGameId)->first();
         if ($game == null)
             return response(['success' => false, 'result' => 'There is no game with this id'], 200);
         try {
@@ -74,22 +92,22 @@ class GameController extends Controller
             if ($list == null)
                 return response(['success' => false, 'result' => 'This user does not exist on Board Game Geek']);
             $counter = 0;
-            foreach ($list as $game)
+            foreach ($list as $bggGame)
             {
-                $exist = Game::where('gameId', '=', $game['gameId'])->first();
+                $exist = Game::where('gameId', '=', $bggGame['gameId'])->first();
                 if ($exist != null) continue;
                 ++$counter;
                 Game::create([
-                    'gameId' => $game['gameId'],
-                    'name' => $game['name'],
-                    'image' => $game['image'],
-                    'thumbnail' => $game['thumbnail'],
-                    'averageRating' => $game['averageRating'],
-                    'rank' => $game['rank'],
-                    'yearPublished' => $game['yearPublished'],
-                    'minPlayers' => $game['minPlayers'],
-                    'maxPlayers' => $game['maxPlayers'],
-                    'playingTime' => $game['playingTime']
+                    'gameId' => $bggGame['gameId'],
+                    'name' => $bggGame['name'],
+                    'image' => $bggGame['image'],
+                    'thumbnail' => $bggGame['thumbnail'],
+                    'averageRating' => $bggGame['averageRating'],
+                    'rank' => $bggGame['rank'],
+                    'yearPublished' => $bggGame['yearPublished'],
+                    'minPlayers' => $bggGame['minPlayers'],
+                    'maxPlayers' => $bggGame['maxPlayers'],
+                    'playingTime' => $bggGame['playingTime']
                 ]);
             }
             return response()->json(['success' => false, 'result' => ['added' => $counter]]);
