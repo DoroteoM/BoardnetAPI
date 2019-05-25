@@ -15,9 +15,9 @@ class CreateLibrariesTable extends Migration
     {
         Schema::create('libraries', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('userId');
-            $table->integer('gameId');
-            $table->timestamp('dateAcquired')->nullable();
+            $table->integer('user_id');
+            $table->integer('game_id');
+            $table->timestamp('date_acquired')->nullable();
             $table->timestamps();
         });
     }

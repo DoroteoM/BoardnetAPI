@@ -24,17 +24,17 @@ class LibraryController extends Controller
         $user = User::where('username', '=', $request->get("username"))->first();
         if ($user == null)
             return response()->json(['success' => false, 'result' => "User does not exist."]);
-        $game = Game::where('gameId', '=', $request->get("bggGameId"))->first();
+        $game = Game::where('game_id', '=', $request->get("bgg_game_id"))->first();
         if ($game == null)
             return response()->json(['success' => false, 'result' => "Game does not exist."]);
-        $copy = Library::where('userId', '=', $user->id)->where('gameId', '=', $game->id)->first();
+        $copy = Library::where('user_id', '=', $user->id)->where('game_id', '=', $game->id)->first();
         if ($copy != null)
             return response()->json(['success' => false, 'result' => "Game is already in users library."]);
 
         $library = Library::create([
-            'userId' => $user->id,
-            'gameId' => $game->id,
-            'dateAcquired' => $request->get("dateAcquired")
+            'user_id' => $user->id,
+            'game_id' => $game->id,
+            'date_acquired' => $request->get("date_acquired")
         ]);
 
         $library->game = $game->name;
@@ -48,7 +48,7 @@ class LibraryController extends Controller
         $user = User::where('username','=',$username)->first();
         if ($user == null)
             return response()->json(['success' => false, 'result' => "User does not exist."]);
-        $list = Library::where('userId', '=', $user->id)->get();
+        $list = Library::where('user_id', '=', $user->id)->get();
         return response(['success' => true, 'result' => $list], 200);
     }
 
@@ -56,8 +56,8 @@ class LibraryController extends Controller
     {
         return Validator::make($data, [
             'username' => 'required|string',
-            'bggGameId' => 'required|integer',
-            'dateAcquired' => 'date|date_format:Y-m-d|after:1900-01-01'
+            'bgg_game_id' => 'required|integer',
+            'date_acquired' => 'date|date_format:Y-m-d|after:1900-01-01'
         ]);
     }
 }
