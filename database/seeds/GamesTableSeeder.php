@@ -19,17 +19,17 @@ class GamesTableSeeder extends Seeder
         for ($i = 0; $i < 10; ++$i)
         {
             Game::create([
-                'gameid' => $faker->numberBetween(1, 20000),
+                'bgg_game_id' => $faker->numberBetween(1, 20000),
                 'title' => $faker->streetName,
                 'link' => $faker->url,
-                'averageRating' => $faker->randomFloat(1, 1, 10),
+                'average_rating' => $faker->randomFloat(1, 1, 10),
                 'rank' => $faker->numberBetween(1, 10000),
                 'image' => $faker->imageUrl(),
                 'thumbnail' => $faker->imageUrl(100, 100),
-                'yearPublished' => $faker->numberBetween(2000,date("Y")),
-                'minPlayers' => $faker->numberBetween(1, 3),
-                'maxPlayers' => $faker->numberBetween(4, 8),
-                'playingTime' => ($faker->numberBetween(2,12))*10
+                'year_published' => $faker->numberBetween(2000,date("Y")),
+                'min_players' => $faker->numberBetween(1, 3),
+                'max_players' => $faker->numberBetween(4, 8),
+                'playing_time' => ($faker->numberBetween(2,12))*10
             ]);
         }
     }

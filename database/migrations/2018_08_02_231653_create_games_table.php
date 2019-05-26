@@ -16,28 +16,20 @@ class CreateGamesTable extends Migration
         Schema::create('games', function (Blueprint $table) {
             $table->increments('id');
             $table->string('link')->nullable();
-            $table->integer('gameId')->nullable()->unique();
+            $table->integer('bgg_game_id')->nullable()->unique();
             $table->string('name');
             $table->string('image')->nullable();
             $table->string('thumbnail')->nullable();
-            $table->integer('minPlayers')->nullable();
-            $table->integer('maxPlayers')->nullable();
-            $table->integer('playingTime')->nullable();
-            $table->boolean('isExpansion')->nullable()->default(false);
-            $table->integer('yearPublished')->nullable();
-            $table->decimal('bggRating')->nullable();
-            $table->decimal('averageRating')->nullable();
+            $table->integer('min_players')->nullable();
+            $table->integer('max_players')->nullable();
+            $table->integer('playing_time')->nullable();
+            $table->boolean('is_expansion')->nullable()->default(false);
+            $table->integer('year_published')->nullable();
+            $table->decimal('bgg_rating')->nullable();
+            $table->decimal('average_rating')->nullable();
             $table->integer('rank')->nullable();
-            $table->integer('numPlays')->nullable()->default(0);
+            $table->integer('num_plays')->nullable()->default(0);
             $table->integer('rating')->nullable();
-            $table->boolean('owned')->nullable()->default(false);
-            $table->boolean('preOrdered')->nullable()->default(false);
-            $table->boolean('previousOwned')->nullable()->default(false);
-            $table->boolean('want')->nullable()->default(false);
-            $table->boolean('wantToPlay')->nullable()->default(false);
-            $table->boolean('wantToBuy')->nullable()->default(false);
-            $table->boolean('wishList')->nullable()->default(false);
-            $table->string('userComment')->nullable();
 
             $table->timestamps();
         });
