@@ -16,21 +16,29 @@ use Illuminate\Http\Request;
 
 Route::group(['middleware' => ['api','cors']], function () {
 
-    //registracija i login
+    //registration i login
     Route::post('auth/register', 'Auth\ApiRegisterController@register');
     Route::post('auth/login', 'Auth\ApiAuthController@login');
 
-    //user
+    //users
     Route::get('users/{username}', 'UserController@read');
-    Route::put('users/{userId}', 'UserController@update');
-    Route::delete('users/{userId}', 'UserController@delete');
+    Route::put('users/{user_id}', 'UserController@update');
+    Route::delete('users/{user_id}', 'UserController@delete');
 
-    //game
+    //games
     Route::post('games/bgg', 'GameController@createFromLibrary');
     Route::get('games', 'GameController@readAll');
-    Route::get('games/{bggGameId}', 'GameController@read');
-    Route::put('games/{bggGameId}', 'GameController@update');
-    Route::delete('games/{bggGameId}', 'GameController@delete');
+    Route::get('games/{bgg_game_id}', 'GameController@read');
+    Route::put('games/{bgg_game_id}', 'GameController@update');
+    Route::delete('games/{bgg_game_id}', 'GameController@delete');
+
+    //libraries
+    Route::post('libraries', 'LibraryController@create');
+    Route::get('libraries/user/{username}', 'LibraryController@readByUser');
+    Route::get('libraries/game/{bgg_game_id}', 'LibraryController@readByGame');
+    Route::put('libraries/{library_id}', 'LibraryController@update');
+    Route::delete('libraries/{library_id}', 'LibraryController@delete');
+    Route::delete('libraries/user/{username}/game/{bgg_game_id}', 'LibraryController@deleteByUserAndGame');
 
     //test
     //Route::post('auth/gettoken', 'Auth\ApiAuthController@authenticate');//I can get token!
