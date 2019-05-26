@@ -38,6 +38,7 @@ Route::group(['middleware' => ['api','cors']], function () {
     Route::get('libraries/game/{bgg_game_id}', 'LibraryController@readByGame');
     Route::put('libraries/{library_id}', 'LibraryController@update');
     Route::delete('libraries/{library_id}', 'LibraryController@delete');
+    Route::delete('libraries/user/{username}/game/{bgg_game_id}', 'LibraryController@deleteByUserAndGame');
 
     //test
     //Route::post('auth/gettoken', 'Auth\ApiAuthController@authenticate');//I can get token!

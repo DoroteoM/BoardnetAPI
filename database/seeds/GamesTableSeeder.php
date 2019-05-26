@@ -19,7 +19,7 @@ class GamesTableSeeder extends Seeder
         for ($i = 0; $i < 10; ++$i)
         {
             Game::create([
-                'game_id' => $faker->numberBetween(1, 20000),
+                'bgg_game_id' => $faker->numberBetween(1, 20000),
                 'title' => $faker->streetName,
                 'link' => $faker->url,
                 'average_rating' => $faker->randomFloat(1, 1, 10),

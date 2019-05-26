@@ -15,7 +15,7 @@ class GameController extends Controller
 
     public function read($bgg_game_id)
     {
-        $game = Game::where('game_id', '=', $bgg_game_id)->first();
+        $game = Game::where('bgg_game_id', '=', $bgg_game_id)->first();
         if ($game == null)
             return response(['success' => false, 'result' => 'There is no game with this id'], 200);
         return response(['success' => true, 'result' => $game], 200);
@@ -30,11 +30,11 @@ class GameController extends Controller
             $bgg_game = json_decode($json, true);
             if ($bgg_game == null)
                 return response(['success' => false, 'result' => 'This game does not exist on Board Game Geek']);
-            $game = Game::where('game_id', '=', $bgg_game_id)->first();
+            $game = Game::where('bgg_game_id', '=', $bgg_game_id)->first();
             if ($game == null)
             {
                 $game = Game::create([
-                    'game_id' => $bgg_game['gameId'],
+                    'bgg_game_id' => $bgg_game['gameId'],
                     'name' => $bgg_game['name'],
                     'image' => $bgg_game['image'],
                     'thumbnail' => $bgg_game['thumbnail'],
@@ -71,7 +71,7 @@ class GameController extends Controller
 
     public function delete($bgg_game_id)
     {
-        $game = Game::where('game_id', '=', $bgg_game_id)->first();
+        $game = Game::where('bgg_game_id', '=', $bgg_game_id)->first();
         if ($game == null)
             return response(['success' => false, 'result' => 'There is no game with this id'], 200);
         try {
@@ -94,11 +94,11 @@ class GameController extends Controller
             $counter = 0;
             foreach ($list as $bgg_game)
             {
-                $exist = Game::where('game_id', '=', $bgg_game['gameId'])->first();
+                $exist = Game::where('bgg_game_id', '=', $bgg_game['gameId'])->first();
                 if ($exist != null) continue;
                 ++$counter;
                 Game::create([
-                    'game_id' => $bgg_game['gameId'],
+                    'bgg_game_id' => $bgg_game['gameId'],
                     'name' => $bgg_game['name'],
                     'image' => $bgg_game['image'],
                     'thumbnail' => $bgg_game['thumbnail'],

@@ -12,7 +12,6 @@ use Validator;
 
 class LibraryController extends Controller
 {
-
     public function create(Request $request)
     {
         $errors = $this->libraryDataValidator($request->all())->errors();
@@ -24,7 +23,7 @@ class LibraryController extends Controller
         $user = User::where('username', '=', $request->get("username"))->first();
         if ($user == null)
             return response()->json(['success' => false, 'result' => "User does not exist."]);
-        $game = Game::where('game_id', '=', $request->get("bgg_game_id"))->first();
+        $game = Game::where('bgg_game_id', '=', $request->get("bgg_game_id"))->first();
         if ($game == null)
             return response()->json(['success' => false, 'result' => "Game does not exist."]);
         $copy = Library::where('user_id', '=', $user->id)->where('game_id', '=', $game->id)->first();
@@ -48,8 +47,73 @@ class LibraryController extends Controller
         $user = User::where('username','=',$username)->first();
         if ($user == null)
             return response()->json(['success' => false, 'result' => "User does not exist."]);
-        $list = Library::where('user_id', '=', $user->id)->get();
+
+        $list = Game::whereHas('libraries', function ($query) use ($user) {
+            $query->where('user_id', '=', $user->id);
+        })->get();
+
         return response(['success' => true, 'result' => $list], 200);
+    }
+
+    public function readBygame($bgg_game_id)
+    {
+        $game = game::where('bgg_game_id','=',$bgg_game_id)->first();
+        if ($game == null)
+            return response()->json(['success' => false, 'result' => "Game does not exist."]);
+
+        $list = User::whereHas('libraries', function ($query) use ($game) {
+            $query->where('game_id', '=', $game->id);
+        })->get();
+
+        return response(['success' => true, 'result' => $list], 200);
+    }
+
+    public function update (Request $request, $library_id)
+    {
+        $errors = $this->dateDataValidator($request->all())->errors();
+        if(count($errors))
+        {
+            return response(['response' => false, 'result' => $errors], 200); //! Na 401 aplkacija ne cita uspjesno odgovor
+        }
+
+        $library = Library::find($library_id);
+        if ($library == null)
+            return response()->json(['success' => false, 'result' => "Library with this id does not exist."]);
+        $library->date_acquired = $request->get("date_acquired");
+        $library->save();
+
+        return response()->json(['success' => true, 'result' => $library]);
+    }
+
+    public function delete($library_id)
+    {
+        $library = Library::find($library_id);
+        if ($library == null)
+            return response(['success' => false, 'result' => 'This game is not in users library.'], 200);
+        try {
+            $library->delete();
+        } catch (Exception $e) {
+        }
+        return response(['success' => true, 'result' => $library], 200);
+    }
+
+    public function deleteByUserAndGame($username, $bgg_game_id)
+    {
+        $user = User::where('username', '=', $username)->first();
+        if ($user == null)
+            return response()->json(['success' => false, 'result' => "User does not exist."]);
+        $game = Game::where('bgg_game_id', '=', $bgg_game_id)->first();
+        if ($game == null)
+            return response()->json(['success' => false, 'result' => "Game does not exist."]);
+
+        $library = Library::where('user_id','=', $user->id)->where('game_id','=', $game->id)->first();
+        if ($library == null)
+            return response(['success' => false, 'result' => 'This game is not in users library.'], 200);
+        try {
+            $library->delete();
+        } catch (Exception $e) {
+        }
+        return response(['success' => true, 'result' => $library], 200);
     }
 
     protected function libraryDataValidator(array $data)
@@ -57,6 +121,13 @@ class LibraryController extends Controller
         return Validator::make($data, [
             'username' => 'required|string',
             'bgg_game_id' => 'required|integer',
+            'date_acquired' => 'date|date_format:Y-m-d|after:1900-01-01'
+        ]);
+    }
+
+    protected function dateDataValidator(array $data)
+    {
+        return Validator::make($data, [
             'date_acquired' => 'date|date_format:Y-m-d|after:1900-01-01'
         ]);
     }
