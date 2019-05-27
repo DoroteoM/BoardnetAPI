@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Friend;
 use App\Models\Library;
 use App\Models\User;
+use Exception;
 use Illuminate\Http\Request;
 use Validator;
 
@@ -39,6 +40,66 @@ class FriendController extends Controller
         $friendship->friend = $friend->username;
 
         return response()->json(['success' => true, 'result' => $friendship]);
+    }
+
+    public function readByUser($username)
+    {
+
+        $user = User::where('username', '=', $username)->first();
+        if ($user == null)
+            return response()->json(['success' => false, 'result' => "User does not exist."]);
+
+        $friends = Friend::where('user_id','=',$user->id)->get();
+
+        return response()->json(['success' => true, 'result' => $friends]);
+    }
+
+    public function readByFriend($friend_username)
+    {
+
+        $friend = User::where('username', '=', $friend_username)->first();
+        if ($friend == null)
+            return response()->json(['success' => false, 'result' => "Friend does not exist."]);
+
+        $users = Friend::where('friend_id','=',$friend->id)->get();
+
+        return response()->json(['success' => true, 'result' => $users]);
+    }
+
+    public function update($username)
+    {
+        return response()->json(['success' => false, 'result' => 'I\'m not doing anything']);
+    }
+
+    public function delete($friends_id)
+    {
+        $friendship = Friend::find($friends_id);
+        if ($friendship == null)
+            return response(['success' => false, 'result' => 'There is no friendship with this id'], 200);
+        try {
+            $friendship->delete();
+        } catch (Exception $e) {
+        }
+        return response(['success' => true, 'result' => $friendship], 200);
+    }
+
+    public function deleteByUserAndFriend($username, $friend_username)
+    {
+        $user = User::where('username', '=', $username)->first();
+        if ($user == null)
+            return response()->json(['success' => false, 'result' => "User does not exist."]);
+        $friend = User::where('username', '=', $friend_username)->first();
+        if ($user == null)
+            return response()->json(['success' => false, 'result' => "Friend does not exist."]);
+
+        $friendship = Friend::where('user_id','=', $user->id)->where('friend_id','=', $friend->id)->first();
+        if ($friendship == null)
+            return response(['success' => false, 'result' => 'This friend is not added by user.'], 200);
+        try {
+            $friendship->delete();
+        } catch (Exception $e) {
+        }
+        return response(['success' => true, 'result' => $friendship], 200);
     }
 
     private function friendDataValidator(array $data)

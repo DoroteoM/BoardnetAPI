@@ -43,9 +43,10 @@ Route::group(['middleware' => ['api','cors']], function () {
     //friends
     Route::post('friends', 'FriendController@create');
     Route::get('friends/user/{username}', 'FriendController@readByUser');
-    Route::get('friends/game/{bgg_game_id}', 'FriendController@readByFriend');
-    Route::put('friends/{library_id}', 'FriendController@update');
-    Route::delete('friends/{library_id}', 'FriendController@delete');
+    Route::get('friends/friend/{friend_username}', 'FriendController@readByFriend');
+    Route::put('friends/{friends_id}', 'FriendController@update');
+    Route::delete('friends/{friends_id}', 'FriendController@delete');
+    Route::delete('friends/user/{username}/friend/{friend_username}', 'FriendController@deleteByUserAndFriend');
 
     //test
     //Route::post('auth/gettoken', 'Auth\ApiAuthController@authenticate');//I can get token!
