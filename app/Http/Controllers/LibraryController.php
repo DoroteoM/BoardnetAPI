@@ -89,7 +89,7 @@ class LibraryController extends Controller
     {
         $library = Library::find($library_id);
         if ($library == null)
-            return response(['success' => false, 'result' => 'This game is not in users library.'], 200);
+            return response(['success' => false, 'result' => 'Library with this id does not exist.'], 200);
         try {
             $library->delete();
         } catch (Exception $e) {

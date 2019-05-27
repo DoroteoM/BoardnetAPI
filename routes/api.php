@@ -40,6 +40,14 @@ Route::group(['middleware' => ['api','cors']], function () {
     Route::delete('libraries/{library_id}', 'LibraryController@delete');
     Route::delete('libraries/user/{username}/game/{bgg_game_id}', 'LibraryController@deleteByUserAndGame');
 
+    //friends
+    Route::post('friends', 'FriendController@create');
+    Route::get('friends/user/{username}', 'FriendController@readByUser');
+    Route::get('friends/friend/{friend_username}', 'FriendController@readByFriend');
+    Route::put('friends/{friends_id}', 'FriendController@update');
+    Route::delete('friends/{friends_id}', 'FriendController@delete');
+    Route::delete('friends/user/{username}/friend/{friend_username}', 'FriendController@deleteByUserAndFriend');
+
     //test
     //Route::post('auth/gettoken', 'Auth\ApiAuthController@authenticate');//I can get token!
     //Route::post('auth/getuser', 'Auth\ApiAuthController@getUser');// I can't get user
