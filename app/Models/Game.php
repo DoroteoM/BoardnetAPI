@@ -12,4 +12,9 @@ class Game extends Model
     {
         return $this->hasMany('App\Models\Library');
     }
+
+    public function plays()
+    {
+        return $this->hasMany('App\Models\Play');
+    }
 }
