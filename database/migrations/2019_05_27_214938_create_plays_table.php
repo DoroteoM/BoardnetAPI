@@ -15,9 +15,9 @@ class CreatePlaysTable extends Migration
     {
         Schema::create('plays', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('user_id');
             $table->integer('game_id');
-            $table->string('mode')->nullable();
-            $table->integer('number_of_players')->nullable();
+            $table->enum('mode', ['SOLO', 'TEAM', 'COOP', 'MASTER'])->nullable();
             $table->integer('duration')->nullable();
             $table->timestamps();
         });
