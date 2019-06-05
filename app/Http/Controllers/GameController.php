@@ -110,7 +110,7 @@ class GameController extends Controller
                     'playing_time' => $bgg_game['playingTime']
                 ]);
             }
-            return response()->json(['success' => false, 'result' => ['added' => $counter]]);
+            return response()->json(['success' => true, 'result' => ['added' => $counter]]);
         }
         catch (Exception $e)
         {

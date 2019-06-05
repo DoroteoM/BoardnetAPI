@@ -54,7 +54,7 @@ Route::group(['middleware' => ['api','cors']], function () {
     Route::get('play/{play_id}', 'PlayController@read');
     Route::get('play/user/{play_id}', 'PlayController@readByUser');
     Route::put('play/{play_id}', 'PlayController@update');
-    Route::delete('play/{play_id}', 'PlayConroller@delete');
+    Route::delete('play/{play_id}', 'PlayController@delete');
 
 
     //test
