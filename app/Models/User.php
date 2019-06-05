@@ -19,24 +19,36 @@ class User extends Authenticatable implements JWTSubject
     //use Authorizable, CanResetPassword, Notifiable;
     use Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
 //    protected $fillable = [
 //        'username', 'email', 'password',
 //    ];
     protected $guarded = [];
 
-    /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
-     */
     protected $hidden = [
         'password', 'remember_token', 'created_at', 'updated_at', 'email_verified_at'
     ];
+
+
+    public function libraries()
+    {
+        return $this->hasMany('App\Models\Library');
+    }
+
+    public function friends_user()
+    {
+        return $this->hasMany('App\Models\Friends');
+    }
+
+    public function friends_friend()
+    {
+        return $this->hasMany('App\Models\Friends');
+    }
+
+    public function plays()
+    {
+        return $this->hasMany('App\Models\Play');
+    }
+
 
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
@@ -58,18 +70,4 @@ class User extends Authenticatable implements JWTSubject
         return [];
     }
 
-    public function libraries()
-    {
-        return $this->hasMany('App\Models\Library');
-    }
-
-    public function friends_user()
-    {
-        return $this->hasMany('App\Models\Friends');
-    }
-
-    public function friends_friend()
-    {
-        return $this->hasMany('App\Models\Friends');
-    }
 }
