@@ -62,6 +62,9 @@ Route::group(['middleware' => ['api','cors']], function () {
     Route::put('team/{team_id}', 'TeamController@update');
     Route::delete('team/{team_id}', 'TeamController@delete');
 
+    //player
+    Route::post('player', 'PlayerController@create');
+
     //test
     //Route::post('auth/gettoken', 'Auth\ApiAuthController@authenticate');//I can get token!
     //Route::post('auth/getuser', 'Auth\ApiAuthController@getUser');// I can't get user
