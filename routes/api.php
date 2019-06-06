@@ -48,7 +48,6 @@ Route::group(['middleware' => ['api','cors']], function () {
     Route::delete('friends/{friends_id}', 'FriendController@delete');
     Route::delete('friends/user/{username}/friend/{friend_username}', 'FriendController@deleteByUserAndFriend');
 
-
     //play
     Route::post('play', 'PlayController@create');
     Route::get('play/{play_id}', 'PlayController@read');
@@ -56,6 +55,12 @@ Route::group(['middleware' => ['api','cors']], function () {
     Route::put('play/{play_id}', 'PlayController@update');
     Route::delete('play/{play_id}', 'PlayController@delete');
 
+    //team
+    Route::post('team', 'TeamController@create');
+    Route::get('team/{team_id}', 'TeamController@read');
+    Route::get('team/play/{play_id}', 'TeamController@readByPlay');
+    Route::put('team/{team_id}', 'TeamController@update');
+    Route::delete('team/{team_id}', 'TeamController@delete');
 
     //test
     //Route::post('auth/gettoken', 'Auth\ApiAuthController@authenticate');//I can get token!
