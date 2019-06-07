@@ -40,13 +40,15 @@ class TeamController extends Controller
             return response()->json(['success' => false, 'result' => "Team does not exist."]);
 
         $team->play->game;
+        $team->players;
         return response()->json(['success' => true, 'result' => $team]);
     }
 
     public function readByPlay($play_id)
     {
-        $team = Team::where('play_id', '=', $play_id)->get();
-        return response()->json(['success' => true, 'result' => $team]);
+        $teams = Team::where('play_id', '=', $play_id)->get();
+        foreach ($teams as $team) $team->players;
+        return response()->json(['success' => true, 'result' => $teams]);
     }
 
     public function update(Request $request, $team_id)
