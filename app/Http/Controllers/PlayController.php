@@ -41,9 +41,17 @@ class PlayController extends Controller
     public function read($play_id)
     {
         $play = Play::find($play_id);
+        if ($play == null)
+            return response()->json(['success' => false, 'result' => "Play does not exist."]);
 
         $play->user;
         $play->game;
+        if ($play->teams->isNotEmpty())
+        {
+            foreach ($play->teams as $team) $team->players;
+        }
+        else
+            $play->players;
         return response()->json(['success' => true, 'result' => $play]);
     }
 

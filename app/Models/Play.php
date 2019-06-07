@@ -22,4 +22,9 @@ class Play extends Model
     {
         return $this->hasMany('App\Models\Team');
     }
+
+    public function players()
+    {
+        return $this->hasMany('App\Models\Player');
+    }
 }

@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Team extends Model
+class Player extends Model
 {
     protected $guarded = [];
 
@@ -13,8 +13,13 @@ class Team extends Model
         return $this->belongsTo('App\Models\Play');
     }
 
-    public function players()
+    public function user()
     {
-        return $this->hasMany('App\Models\Player');
+        return $this->belongsTo('App\Models\User');
+    }
+
+    public function team()
+    {
+        return $this->belongsTo('App\Models\Team');
     }
 }
