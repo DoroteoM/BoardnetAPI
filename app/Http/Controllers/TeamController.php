@@ -77,6 +77,10 @@ class TeamController extends Controller
         $team = Team::find($team_id);
         if ($team == null)
             return response(['success' => false, 'result' => 'Team with this id does not exist.'], 200);
+
+        $players = $team->players;
+        foreach ($players as $player) $player->delete();
+
         try {
             $team->delete();
         } catch (Exception $e) {

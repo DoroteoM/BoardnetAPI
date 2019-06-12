@@ -28,8 +28,6 @@ class CreateGamesTable extends Migration
             $table->decimal('bgg_rating')->nullable();
             $table->decimal('average_rating')->nullable();
             $table->integer('rank')->nullable();
-            $table->integer('num_plays')->nullable()->default(0);
-            $table->integer('rating')->nullable();
             $table->timestamps();
         });
     }

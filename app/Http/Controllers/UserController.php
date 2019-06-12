@@ -43,6 +43,25 @@ class UserController extends Controller
         if ($user == null)
             return response(['success' => false, 'result' => "User does not exist"], 200);
 
+        $libraries = $user->libraries;
+        foreach ($libraries as $library) $library->delete();
+
+        $friends_user = $user->friends_user;
+        foreach ($friends_user as $friend) $friend->delete();
+
+        $friends_friend = $user->friends_friend;
+        foreach ($friends_friend as $friend) $friend->delete();
+
+        $plays = $user->plays;
+        foreach ($plays as $play) $play->delete();
+
+        $players = $user->players;
+        foreach ($players as $player)
+        {
+            $player->user_id = null;
+            $player->save(); //TODO test this
+        }
+
         $user->delete();
 
         return response(['success' => true, 'result' => ['deleted' => $user->username]], 200);

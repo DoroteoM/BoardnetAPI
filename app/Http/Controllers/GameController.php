@@ -74,6 +74,20 @@ class GameController extends Controller
         $game = Game::where('bgg_game_id', '=', $bgg_game_id)->first();
         if ($game == null)
             return response(['success' => false, 'result' => 'There is no game with this id'], 200);
+
+        $libraryes = $game->libraries;
+        foreach ($libraryes as $library) $library->delete();
+
+        $plays = $game->plays;
+        foreach ($plays as $play)
+        {
+            $teams = $play->teams;
+            foreach ($teams as $team) $team->delete();
+            $players = $play->players;
+            foreach ($players as $player) $player->delete();
+            $play->delete();
+        }
+
         try {
             $game->delete();
         } catch (Exception $e) {

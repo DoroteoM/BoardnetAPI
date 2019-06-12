@@ -36,12 +36,12 @@ class User extends Authenticatable implements JWTSubject
 
     public function friends_user()
     {
-        return $this->hasMany('App\Models\Friends');
+        return $this->hasMany('App\Models\Friend');
     }
 
     public function friends_friend()
     {
-        return $this->hasMany('App\Models\Friends');
+        return $this->hasMany('App\Models\Friend');
     }
 
     public function plays()
@@ -51,7 +51,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function players()
     {
-        return $this->hasMany('App\Models\Players');
+        return $this->hasMany('App\Models\Player');
     }
 
 
