@@ -22,7 +22,7 @@ class UserController extends Controller
         $errors = $this->userDataValidator($request->all(), $user_id)->errors();
         if(count($errors))
         {
-            return response(['response' => false, 'result' => $errors], 200); //! Na 401 aplkacija ne cita uspjesno odgovor
+            return response(['success' => false, 'result' => $errors], 200); //! Na 401 aplkacija ne cita uspjesno odgovor
         }
 
         $user = User::find($user_id);
