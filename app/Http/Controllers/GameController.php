@@ -131,4 +131,10 @@ class GameController extends Controller
             return response()->json(['success' => false, 'result' => $e->getMessage()]);
         }
     }
+
+    public function searchGames(String $name)
+    {
+        $games = Game::where('name', 'LIKE', '%' . $name . '%')->get();
+        return response(['success' => true, 'result' => $games], 200);
+    }
 }

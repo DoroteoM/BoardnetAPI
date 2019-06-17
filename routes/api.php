@@ -31,6 +31,7 @@ Route::group(['middleware' => ['api','cors']], function () {
     Route::get('games/{bgg_game_id}', 'GameController@read');
     Route::post('games/update/{bgg_game_id}', 'GameController@update');
     Route::get('games/delete/{bgg_game_id}', 'GameController@delete');
+    Route::get('games/search/{name}', 'GameController@searchGames');
 
     //libraries
     Route::post('libraries', 'LibraryController@create');
