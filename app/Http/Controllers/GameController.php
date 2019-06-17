@@ -137,4 +137,12 @@ class GameController extends Controller
         $games = Game::where('name', 'LIKE', '%' . $name . '%')->get();
         return response(['success' => true, 'result' => $games], 200);
     }
+
+    public function letter(String $letter)
+    {
+        if (strlen($letter) != 1)
+            return response(['success' => false, 'result' => "One letter expected"], 200);
+        $games = Game::where('name', 'LIKE', $letter . '%')->get();
+        return response(['success' => true, 'result' => $games], 200);
+    }
 }
