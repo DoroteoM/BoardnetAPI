@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Game;
 use Exception;
 use Illuminate\Http\Request;
+use PhpParser\Node\Expr\Cast\Object_;
+use stdClass;
 
 class GameController extends Controller
 {
@@ -135,7 +137,15 @@ class GameController extends Controller
     public function searchGames(String $name)
     {
         $games = Game::where('name', 'LIKE', '%' . $name . '%')->get();
-        return response(['success' => true, 'result' => $games], 200);
+        foreach($games as $game)
+        {
+            $item = new Game;
+            $item->id = $game->id;
+            $item->bgg_game_id = $game->bgg_game_id;
+            $item->name = $game->name;
+            $list[] = $item->toArray();
+        }
+        return response(['success' => true, 'result' => $list], 200);
     }
 
     public function letter(String $letter)
@@ -143,6 +153,14 @@ class GameController extends Controller
         if (strlen($letter) != 1)
             return response(['success' => false, 'result' => "One letter expected"], 200);
         $games = Game::where('name', 'LIKE', $letter . '%')->get();
-        return response(['success' => true, 'result' => $games], 200);
+        foreach($games as $game)
+        {
+            $item = new Game;
+            $item->id = $game->id;
+            $item->bgg_game_id = $game->bgg_game_id;
+            $item->name = $game->name;
+            $list[] = $item->toArray();
+        }
+        return response(['success' => true, 'result' => $list], 200);
     }
 }
