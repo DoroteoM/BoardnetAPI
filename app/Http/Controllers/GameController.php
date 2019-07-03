@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Game;
+use App\Models\Library;
+use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use PhpParser\Node\Expr\Cast\Object_;
@@ -15,11 +17,21 @@ class GameController extends Controller
         return response(['success' => true, 'result' => Game::all()], 200);
     }
 
-    public function read($bgg_game_id)
+    public function read($bgg_game_id, $username = null)
     {
         $game = Game::where('bgg_game_id', '=', $bgg_game_id)->first();
         if ($game == null)
             return response(['success' => false, 'result' => 'There is no game with this id'], 200);
+        if ($username != null)
+        {
+            $user = User::where('username','=',$username)->first();
+            $inLibrary = Library::where('user_id','=',$user->id)
+                ->where('game_id','=',$game->id)->first();
+            if ($inLibrary != null)
+                $game->inLibrary = true;
+            else
+                $game->inLibrary = false;
+        }
         return response(['success' => true, 'result' => $game], 200);
     }
 
@@ -137,6 +149,8 @@ class GameController extends Controller
     public function searchGames(String $name)
     {
         $games = Game::where('name', 'LIKE', '%' . $name . '%')->get();
+        if ($games->isEmpty())
+            $list[] = null;
         foreach($games as $game)
         {
             $item = new Game;
@@ -153,6 +167,8 @@ class GameController extends Controller
         if (strlen($letter) != 1)
             return response(['success' => false, 'result' => "One letter expected"], 200);
         $games = Game::where('name', 'LIKE', $letter . '%')->get();
+        if ($games->isEmpty())
+            $list[] = null;
         foreach($games as $game)
         {
             $item = new Game;

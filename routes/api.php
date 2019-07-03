@@ -24,15 +24,17 @@ Route::group(['middleware' => ['api','cors']], function () {
     Route::get('users/{username}', 'UserController@read');
     Route::post('users/update/{user_id}', 'UserController@update');
     Route::get('users/delete/{user_id}', 'UserController@delete');
+    Route::get('users/search/name/{name}', 'UserController@searchByName');
+    Route::get('users/search/username/{username}', 'UserController@searchByUsername');
 
     //games
     Route::post('games/bgg', 'GameController@createFromLibrary');
     Route::get('games', 'GameController@readAll');
-    Route::get('games/{bgg_game_id}', 'GameController@read');
+    Route::get('games/{bgg_game_id}/{username?}', 'GameController@read');
     Route::post('games/update/{bgg_game_id}', 'GameController@update');
     Route::get('games/delete/{bgg_game_id}', 'GameController@delete');
-    Route::get('games/search/{name}', 'GameController@searchGames');
-    Route::get('games/letter/{letter}', 'GameController@letter');
+    Route::get('games/search/name/{name}', 'GameController@searchGames');
+    Route::get('games/search/letter/{letter}', 'GameController@letter');
 
     //libraries
     Route::post('libraries', 'LibraryController@create');

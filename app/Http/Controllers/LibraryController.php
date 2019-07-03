@@ -47,17 +47,25 @@ class LibraryController extends Controller
         $user = User::where('username','=',$username)->first();
         if ($user == null)
             return response()->json(['success' => false, 'result' => "User does not exist."]);
-
-        $list = Game::whereHas('libraries', function ($query) use ($user) {
+        $games = Game::whereHas('libraries', function ($query) use ($user) {
             $query->where('user_id', '=', $user->id);
         })->get();
-
+        if ($games->isEmpty())
+            $list[] = null;
+        foreach($games as $game)
+        {
+            $item = new Game;
+            $item->id = $game->id;
+            $item->bgg_game_id = $game->bgg_game_id;
+            $item->name = $game->name;
+            $list[] = $item->toArray();
+        }
         return response(['success' => true, 'result' => $list], 200);
     }
 
     public function readBygame($bgg_game_id)
     {
-        $game = game::where('bgg_game_id','=',$bgg_game_id)->first();
+        $game = Game::where('bgg_game_id','=',$bgg_game_id)->first();
         if ($game == null)
             return response()->json(['success' => false, 'result' => "Game does not exist."]);
 
