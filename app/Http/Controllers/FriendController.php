@@ -43,7 +43,6 @@ class FriendController extends Controller
 
     public function readByUser($username)
     {
-
         $user = User::where('username', '=', $username)->first();
         if ($user == null)
             return response()->json(['success' => false, 'result' => "User does not exist."]);
@@ -55,7 +54,6 @@ class FriendController extends Controller
 
     public function readByFriend($friend_username)
     {
-
         $friend = User::where('username', '=', $friend_username)->first();
         if ($friend == null)
             return response()->json(['success' => false, 'result' => "Friend does not exist."]);
@@ -63,6 +61,20 @@ class FriendController extends Controller
         $users = Friend::where('friend_id','=',$friend->id)->get();
 
         return response()->json(['success' => true, 'result' => $users]);
+    }
+
+    public function areFriends($username, $friend_username)
+    {
+        $user = User::where('username', '=', $username)->first();
+        if ($user == null)
+            return response()->json(['success' => false, 'result' => "User does not exist."]);
+        $friend = User::where('username', '=', $friend_username)->first();
+        if ($friend == null)
+            return response()->json(['success' => false, 'result' => "Friend does not exist."]);
+
+        $friends = Friend::where('user_id',$user->id)->where('friend_id',$friend->id)->get();
+
+        return response()->json(['success' => true, 'result' => $friends->isNotEmpty()]);
     }
 
     public function update($username)

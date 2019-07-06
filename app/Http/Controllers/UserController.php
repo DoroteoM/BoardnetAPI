@@ -72,13 +72,13 @@ class UserController extends Controller
     {
         $users = User::where('username', 'LIKE', '%'.$username.'%')->get();
         if ($users->isEmpty())
-            $list[] = null;
+            return response(['success' => true, 'result' => null], 200);
         foreach($users as $user)
         {
             $item = new User;
-            $item->id = $user->id;
-            $item->name = $user->name.' '.$user->surname;
             $item->username = $user->username;
+            $item->name = $user->name;
+            $item->surname = $user->surname;
             $list[] = $item->toArray();
         }
         return response(['success' => true, 'result' => $list], 200);
@@ -104,7 +104,7 @@ class UserController extends Controller
             $users = $usersNameList->intersect($usersSurnameList);
 
         if (!$users->count())
-            $list[] = null;
+            return response(['success' => true, 'result' => null], 200);
         foreach($users as $user)
         {
             $item = new User;
