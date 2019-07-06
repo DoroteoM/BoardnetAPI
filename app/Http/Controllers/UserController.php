@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Exception;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
@@ -65,6 +66,54 @@ class UserController extends Controller
         $user->delete();
 
         return response(['success' => true, 'result' => ['deleted' => $user->username]], 200);
+    }
+
+    public function searchByUsername ($username)
+    {
+        $users = User::where('username', 'LIKE', '%'.$username.'%')->get();
+        if ($users->isEmpty())
+            return response(['success' => true, 'result' => null], 200);
+        foreach($users as $user)
+        {
+            $item = new User;
+            $item->username = $user->username;
+            $item->name = $user->name;
+            $item->surname = $user->surname;
+            $list[] = $item->toArray();
+        }
+        return response(['success' => true, 'result' => $list], 200);
+    }
+
+    public function searchByName ($name)
+    {
+        $pieces = explode(" ", $name);
+        $usersNameList = new Collection;
+        $usersSurnameList = new Collection;
+        foreach ($pieces as $piece)
+        {
+            $usersName = User::where('name','LIKE', $piece.'%')->get();
+            if ($usersName->isNotEmpty())
+                $usersNameList = $usersNameList->merge($usersName);
+            $usersSurname = User::where('surname','LIKE', $piece.'%')->get();
+            if ($usersSurname->isNotEmpty())
+                $usersSurnameList = $usersSurnameList->merge($usersSurname);
+        }
+        if (count($pieces) == 1)
+            $users = $usersNameList->merge($usersSurnameList);
+        else
+            $users = $usersNameList->intersect($usersSurnameList);
+
+        if (!$users->count())
+            return response(['success' => true, 'result' => null], 200);
+        foreach($users as $user)
+        {
+            $item = new User;
+            $item->username = $user->username;
+            $item->name = $user->name;
+            $item->surname = $user->surname;
+            $list[] = $item->toArray();
+        }
+        return response(['success' => true, 'result' => $list], 200);
     }
 
     protected function userDataValidator(array $data, $user_id)
