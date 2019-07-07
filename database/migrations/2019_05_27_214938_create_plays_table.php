@@ -17,7 +17,7 @@ class CreatePlaysTable extends Migration
             $table->increments('id');
             $table->integer('user_id');
             $table->integer('game_id');
-            $table->enum('mode', ['SOLO', 'TEAM', 'COOP', 'MASTER'])->nullable();
+            $table->enum('mode', ['SOLO', 'FFA', 'TEAM', 'COOP', 'MASTER'])->nullable();
             $table->integer('duration')->nullable();
             $table->timestamps();
         });

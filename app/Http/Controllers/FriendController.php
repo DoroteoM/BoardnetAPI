@@ -49,6 +49,12 @@ class FriendController extends Controller
 
         $friends = Friend::where('user_id','=',$user->id)->get();
 
+        foreach ($friends as $friend)
+        {
+            $friend->user;
+            $friend->friend;
+        }
+
         return response()->json(['success' => true, 'result' => $friends]);
     }
 
@@ -58,9 +64,15 @@ class FriendController extends Controller
         if ($friend == null)
             return response()->json(['success' => false, 'result' => "Friend does not exist."]);
 
-        $users = Friend::where('friend_id','=',$friend->id)->get();
+        $friends = Friend::where('friend_id','=',$friend->id)->get();
 
-        return response()->json(['success' => true, 'result' => $users]);
+        foreach ($friends as $friend)
+        {
+            $friend->user;
+            $friend->friend;
+        }
+
+        return response()->json(['success' => true, 'result' => $friends]);
     }
 
     public function areFriends($username, $friend_username)
