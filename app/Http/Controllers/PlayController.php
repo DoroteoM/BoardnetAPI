@@ -16,7 +16,7 @@ class PlayController extends Controller
         $errors = $this->playDataValidator($request->all())->errors();
         if(count($errors))
         {
-            return response(['response' => false, 'result' => $errors], 200); //! Na 401 aplkacija ne cita uspjesno odgovor
+            return response(['success' => false, 'result' => $errors], 200); //! Na 401 aplkacija ne cita uspjesno odgovor
         }
 
         $user = User::where('username', '=', $request->get("username"))->first();
@@ -74,7 +74,7 @@ class PlayController extends Controller
         $errors = $this->playUpdateDataValidator($request->all())->errors();
         if(count($errors))
         {
-            return response(['response' => false, 'result' => $errors], 200); //! Na 401 aplkacija ne cita uspjesno odgovor
+            return response(['success' => false, 'result' => $errors], 200); //! Na 401 aplkacija ne cita uspjesno odgovor
         }
 
         $play = Play::find($play_id);
@@ -105,7 +105,7 @@ class PlayController extends Controller
             'username' => 'required|string',
             'bgg_game_id' => 'required|integer',
             'duration' => 'integer',
-            'mode' => 'string|in:PVP,TEAM,COOP,MASTER,SOLO'
+            'mode' => 'string|in:SOLO,PVP,TEAM,COOP,MASTER'
         ]);
     }
 
@@ -113,7 +113,7 @@ class PlayController extends Controller
     {
         return Validator::make($data, [
             'duration' => 'integer',
-            'mode' => 'string|in:PVP,TEAM,COOP,MASTER,SOLO'
+            'mode' => 'string|in:SOLO,PVP,TEAM,COOP,MASTER'
         ]);
     }
 }

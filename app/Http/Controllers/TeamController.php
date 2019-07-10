@@ -15,7 +15,7 @@ class TeamController extends Controller
         $errors = $this->teamDataValidator($request->all())->errors();
         if(count($errors))
         {
-            return response(['response' => false, 'result' => $errors], 200); //! Na 401 aplkacija ne cita uspjesno odgovor
+            return response(['success' => false, 'result' => $errors], 200); //! Na 401 aplkacija ne cita uspjesno odgovor
         }
 
         $play = Play::find($request->get('play_id'));
@@ -56,7 +56,7 @@ class TeamController extends Controller
         $errors = $this->teamUpdateDataValidator($request->all())->errors();
         if(count($errors))
         {
-            return response(['response' => false, 'result' => $errors], 200); //! Na 401 aplkacija ne cita uspjesno odgovor
+            return response(['success' => false, 'result' => $errors], 200); //! Na 401 aplkacija ne cita uspjesno odgovor
         }
 
         $team = Team::find($team_id);

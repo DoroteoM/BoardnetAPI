@@ -17,7 +17,7 @@ class LibraryController extends Controller
         $errors = $this->libraryDataValidator($request->all())->errors();
         if(count($errors))
         {
-            return response(['response' => false, 'result' => $errors], 200); //! Na 401 aplkacija ne cita uspjesno odgovor
+            return response(['success' => false, 'result' => $errors], 200); //! Na 401 aplkacija ne cita uspjesno odgovor
         }
 
         $user = User::where('username', '=', $request->get("username"))->first();
@@ -81,7 +81,7 @@ class LibraryController extends Controller
         $errors = $this->dateDataValidator($request->all())->errors();
         if(count($errors))
         {
-            return response(['response' => false, 'result' => $errors], 200); //! Na 401 aplkacija ne cita uspjesno odgovor
+            return response(['success' => false, 'result' => $errors], 200); //! Na 401 aplkacija ne cita uspjesno odgovor
         }
 
         $library = Library::find($library_id);

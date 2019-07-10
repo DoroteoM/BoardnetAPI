@@ -15,7 +15,7 @@ class FriendController extends Controller
         $errors = $this->friendDataValidator($request->all())->errors();
         if(count($errors))
         {
-            return response(['response' => false, 'result' => $errors], 200); //! Na 401 aplkacija ne cita uspjesno odgovor
+            return response(['success' => false, 'result' => $errors], 200); //! Na 401 aplkacija ne cita uspjesno odgovor
         }
 
         $user = User::where('username', '=', $request->get("username"))->first();

@@ -17,7 +17,7 @@ class PlayerController extends Controller
         $errors = $this->playerDataValidator($request->all())->errors();
         if(count($errors))
         {
-            return response(['response' => false, 'result' => $errors], 200); //! Na 401 aplkacija ne cita uspjesno odgovor
+            return response(['success' => false, 'result' => $errors], 200); //! Na 401 aplkacija ne cita uspjesno odgovor
         }
 
         if ($request->get('username') == null && $request->get('name') == null)
@@ -102,7 +102,7 @@ class PlayerController extends Controller
         $errors = $this->playerUpdateDataValidator($request->all())->errors();
         if(count($errors))
         {
-            return response(['response' => false, 'result' => $errors], 200); //! Na 401 aplkacija ne cita uspjesno odgovor
+            return response(['success' => false, 'result' => $errors], 200); //! Na 401 aplkacija ne cita uspjesno odgovor
         }
 
         $player = Player::find($player_id);
