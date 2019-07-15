@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Game;
 use App\Models\Play;
+use App\Models\Player;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Validator;
 
 class PlayController extends Controller
@@ -46,13 +48,49 @@ class PlayController extends Controller
 
         $play->user;
         $play->game;
+
         if ($play->teams->isNotEmpty())
         {
             foreach ($play->teams as $team) $team->players;
         }
         else
-            $play->players;
+        {
+            $players = Player::where('play_id', $play->id)->orderBy('won','desc')->orderBy('points','desc')->get();
+            foreach ($players as $player) $player->user;
+            $play->players = $players;
+        }
+
         return response()->json(['success' => true, 'result' => $play]);
+    }
+
+    public function readFriendsNotInPlay($play_id)
+    {
+        $play = Play::find($play_id);
+        if ($play == null)
+            return response()->json(['success' => false, 'result' => "Play does not exist."]);
+
+        $me = User::find($play->user_id);
+
+        $friends = collect([$me]);
+        foreach ($play->user->friends_friend as $friend)
+        {
+            $friends->push($friend->friend);
+        }
+
+        $players = collect([]);
+        foreach ($play->players as $player)
+        {
+            $players->push($player->user);
+        }
+
+        $friendsNotInPlay = collect([]);
+        foreach ($friends as $friend)
+        {
+            if (!$players->contains($friend))
+                $friendsNotInPlay->push($friend);
+        }
+
+        return response()->json(['success' => true, 'result' => $friendsNotInPlay]);
     }
 
     public function readByUser($username)
@@ -60,7 +98,7 @@ class PlayController extends Controller
         $user = User::where('username', '=', $username)->first();
         if ($user == null)
             return response()->json(['success' => false, 'result' => "User does not exist."]);
-        $plays = Play::where('user_id','=',$user->id)->get();
+        $plays = Play::where('user_id','=',$user->id)->orderBy('id', 'desc')->get();
 
         foreach ($plays as $play)
         {

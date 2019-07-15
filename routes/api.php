@@ -48,7 +48,7 @@ Route::group(['middleware' => ['api','cors']], function () {
     Route::post('friends', 'FriendController@create');
     Route::get('friends/user/{username}', 'FriendController@readByUser');
     Route::get('friends/friend/{friend_username}', 'FriendController@readByFriend');
-    Route::get('friends/arefriends/user/{username}/friend/{friend_username}', 'FriendController@areFriends');
+    Route::get('friends/are-friends/user/{username}/friend/{friend_username}', 'FriendController@areFriends');
     Route::put('friends/{friends_id}', 'FriendController@update');
     Route::delete('friends/{friends_id}', 'FriendController@delete');
     Route::delete('friends/user/{username}/friend/{friend_username}', 'FriendController@deleteByUserAndFriend');
@@ -56,6 +56,7 @@ Route::group(['middleware' => ['api','cors']], function () {
     //play
     Route::post('play', 'PlayController@create');
     Route::get('play/{play_id}', 'PlayController@read');
+    Route::get('play/friends-not-in-play/{play_id}', 'PlayController@readFriendsNotInPlay');
     Route::get('play/user/{play_id}', 'PlayController@readByUser');
     Route::put('play/{play_id}', 'PlayController@update');
     Route::delete('play/{play_id}', 'PlayController@delete');

@@ -41,10 +41,15 @@ class PlayerController extends Controller
                 return response()->json(['success' => false, 'result' => "User is already in this play."]);
         }
 
+        if ($user != null)
+            $name = $request->get('name') ? $request->get('name') : $user->name ? $user->name : $user->username;
+        else
+            $name = $request->get('name');
+
         $player = Player::create([
             'play_id' => $play->id,
             'user_id' => $user ? $user->id : null,
-            'name' => $request->get('name') ? $request->get('name') : $user->name ? $user->name : $user->username,
+            'name' => $name,
             'team_id' => $team ? $team->id : null,
             'won' => $request->get("won"),
             'points' => $request->get("points")
@@ -122,8 +127,13 @@ class PlayerController extends Controller
                 return response()->json(['success' => false, 'result' => "User is already in this play."]);
         }
 
+        if ($user != null)
+            $player->name = $request->get('name') ? $request->get('name') : $user->name ? $user->name : $user->username;
+        else if ($request->get('name') != null)
+            $player->name = $request->get('name');
+        else
+            return response()->json(['success' => false, 'result' => 'You must enter username or players name.']);
         $player->user_id = $user ? $user->id : null;
-        $player->name = $request->get('name') ? $request->get('name') : $user->name ? $user->name : $user->username;
         $player->team_id = $team ? $team->id : null;
         $player->won = $request->get("won");
         $player->points = $request->get("points");
