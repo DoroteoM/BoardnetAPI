@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class TestController extends Controller
 {
@@ -42,5 +43,27 @@ class TestController extends Controller
             'response' => true,
             'result' => $test
         ], 200);
+    }
+
+    public function request(Request $request)
+    {
+        $errors = Validator::make($request->all(), [
+            'name' => 'required',
+            'surname' => 'present',
+            'age' => 'integer|max:99',
+            'height' => 'integer',
+            'email' => 'email',
+            'password' => 'confirmed'
+        ])->errors();
+
+        if (count($errors))
+        {
+            return response()->json($errors);
+        }
+        else
+        {
+            return response()->json($request);
+        }
+
     }
 }

@@ -13,7 +13,13 @@ use Validator;
 
 class PlayController extends Controller
 {
-    public function create(Request $request)
+    public function index()
+    {
+        $plays = Play::paginate(50);
+        return response(['success' => true, 'result' => $plays], 200);
+    }
+
+    public function store(Request $request)
     {
         $errors = $this->playDataValidator($request->all())->errors();
         if(count($errors))
@@ -40,7 +46,7 @@ class PlayController extends Controller
         return response()->json(['success' => true, 'result' => $play]);
     }
 
-    public function read($play_id)
+    public function show($play_id)
     {
         $play = Play::find($play_id);
         if ($play == null)
@@ -63,7 +69,37 @@ class PlayController extends Controller
         return response()->json(['success' => true, 'result' => $play]);
     }
 
-    public function readFriendsNotInPlay($play_id)
+    public function update(Request $request, $play_id)
+    {
+        $errors = $this->playUpdateDataValidator($request->all())->errors();
+        if(count($errors))
+        {
+            return response(['success' => false, 'result' => $errors], 200); //! Na 401 aplkacija ne cita uspjesno odgovor
+        }
+
+        $play = Play::find($play_id);
+
+        $play->mode = $request->get('mode');
+        $play->duration = $request->get('duration');
+        $play->save();
+
+        return response()->json(['success' => true, 'result' => $play]);
+    }
+
+    public function destroy($play_id)
+    {
+        $play = Play::find($play_id);
+        if ($play == null)
+            return response(['success' => false, 'result' => 'Play with this id does not exist.'], 200);
+        try {
+            $play->delete();
+        } catch (Exception $e) {
+        }
+
+        return response()->json(['success' => true, 'result' => $play]);
+    }
+
+    public function showFriendsNotInPlay($play_id)
     {
         $play = Play::find($play_id);
         if ($play == null)
@@ -93,7 +129,7 @@ class PlayController extends Controller
         return response()->json(['success' => true, 'result' => $friendsNotInPlay]);
     }
 
-    public function readByUser($username)
+    public function showByUser($username)
     {
         $user = User::where('username', '=', $username)->first();
         if ($user == null)
@@ -105,36 +141,6 @@ class PlayController extends Controller
             $play->game;
         }
         return response()->json(['success' => true, 'result' => $plays]);
-    }
-
-    public function update(Request $request, $play_id)
-    {
-        $errors = $this->playUpdateDataValidator($request->all())->errors();
-        if(count($errors))
-        {
-            return response(['success' => false, 'result' => $errors], 200); //! Na 401 aplkacija ne cita uspjesno odgovor
-        }
-
-        $play = Play::find($play_id);
-
-        $play->mode = $request->get('mode');
-        $play->duration = $request->get('duration');
-        $play->save();
-
-        return response()->json(['success' => true, 'result' => $play]);
-    }
-
-    public function delete($play_id)
-    {
-        $play = Play::find($play_id);
-        if ($play == null)
-            return response(['success' => false, 'result' => 'Play with this id does not exist.'], 200);
-        try {
-            $play->delete();
-        } catch (Exception $e) {
-        }
-
-        return response()->json(['success' => true, 'result' => $play]);
     }
 
     protected function playDataValidator(array $data)

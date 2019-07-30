@@ -10,7 +10,13 @@ use Validator;
 
 class FriendController extends Controller
 {
-    public function create(Request $request)
+    public function index()
+    {
+        $friends = Friend::paginate(50);
+        return response(['success' => true, 'result' => $friends], 200);
+    }
+
+    public function store(Request $request)
     {
         $errors = $this->friendDataValidator($request->all())->errors();
         if(count($errors))
@@ -41,7 +47,31 @@ class FriendController extends Controller
         return response()->json(['success' => true, 'result' => $friendship]);
     }
 
-    public function readByUser($username)
+    public function show ($id) {
+        $friend = Friend::find($id);
+        if ($friend == null)
+            return response()->json(['success' => false, 'result' => $friend], 404);
+        return response()->json(['success' => true, 'result' => $friend]);
+    }
+
+    public function update($id)
+    {
+        return response()->json(['success' => false, 'result' => 'I\'m not doing anything']);
+    }
+
+    public function destroy($friends_id)
+    {
+        $friendship = Friend::find($friends_id);
+        if ($friendship == null)
+            return response(['success' => false, 'result' => 'There is no friendship with this id'], 200);
+        try {
+            $friendship->delete();
+        } catch (Exception $e) {
+        }
+        return response(['success' => true, 'result' => $friendship], 200);
+    }
+
+    public function showByUser($username)
     {
         $user = User::where('username', '=', $username)->first();
         if ($user == null)
@@ -58,7 +88,7 @@ class FriendController extends Controller
         return response()->json(['success' => true, 'result' => $friends]);
     }
 
-    public function readByFriend($friend_username)
+    public function showByFriend($friend_username)
     {
         $friend = User::where('username', '=', $friend_username)->first();
         if ($friend == null)
@@ -89,24 +119,7 @@ class FriendController extends Controller
         return response()->json(['success' => true, 'result' => $friends->isNotEmpty()]);
     }
 
-    public function update($username)
-    {
-        return response()->json(['success' => false, 'result' => 'I\'m not doing anything']);
-    }
-
-    public function delete($friends_id)
-    {
-        $friendship = Friend::find($friends_id);
-        if ($friendship == null)
-            return response(['success' => false, 'result' => 'There is no friendship with this id'], 200);
-        try {
-            $friendship->delete();
-        } catch (Exception $e) {
-        }
-        return response(['success' => true, 'result' => $friendship], 200);
-    }
-
-    public function deleteByUserAndFriend($username, $friend_username)
+    public function destroyByUserAndFriend($username, $friend_username)
     {
         $user = User::where('username', '=', $username)->first();
         if ($user == null)

@@ -12,7 +12,13 @@ use Validator;
 
 class PlayerController extends Controller
 {
-    public function create(Request $request)
+    public function index()
+    {
+        $players = Player::paginate(50);
+        return response(['success' => true, 'result' => $players], 200);
+    }
+
+    public function store(Request $request)
     {
         $errors = $this->playerDataValidator($request->all())->errors();
         if(count($errors))
@@ -61,7 +67,7 @@ class PlayerController extends Controller
         return response()->json(['success' => true, 'result' => $player]);
     }
 
-    public function read($player_id)
+    public function show($player_id)
     {
         $player = Player::find($player_id);
         if ($player == null)
@@ -71,35 +77,6 @@ class PlayerController extends Controller
         $player->play->game;
         $player->team;
         return response()->json(['success' => true, 'result' => $player]);
-    }
-
-    public function readByPlay($play_id)
-    {
-        $play = Play::find($play_id);
-        if ($play == null)
-            return response()->json(['success' => false, 'result' => "Play does not exist."]);
-
-        $players = $play->players;
-        foreach ($players as $player)
-        {
-            $player->user;
-            $player->team;
-        }
-        return response()->json(['success' => true, 'result' => $players]);
-    }
-
-    public function readByTeam($team_id)
-    {
-        $team = Team::find($team_id);
-        if ($team == null)
-            return response()->json(['success' => false, 'result' => "Team does not exist."]);
-
-        $players = $team->players;
-        foreach ($players as $player)
-        {
-            $player->user;
-        }
-        return response()->json(['success' => true, 'result' => $players]);
     }
 
     public function update(Request $request, $player_id)
@@ -145,7 +122,7 @@ class PlayerController extends Controller
         return response()->json(['success' => true, 'result' => $player]);
     }
 
-    public function delete($player_id)
+    public function destroy($player_id)
     {
         $player = Player::find($player_id);
         if ($player == null)
@@ -156,6 +133,35 @@ class PlayerController extends Controller
         }
 
         return response()->json(['success' => true, 'result' => $player]);
+    }
+
+    public function showByPlay($play_id)
+    {
+        $play = Play::find($play_id);
+        if ($play == null)
+            return response()->json(['success' => false, 'result' => "Play does not exist."]);
+
+        $players = $play->players;
+        foreach ($players as $player)
+        {
+            $player->user;
+            $player->team;
+        }
+        return response()->json(['success' => true, 'result' => $players]);
+    }
+
+    public function showByTeam($team_id)
+    {
+        $team = Team::find($team_id);
+        if ($team == null)
+            return response()->json(['success' => false, 'result' => "Team does not exist."]);
+
+        $players = $team->players;
+        foreach ($players as $player)
+        {
+            $player->user;
+        }
+        return response()->json(['success' => true, 'result' => $players]);
     }
 
     protected function playerDataValidator(array $data)

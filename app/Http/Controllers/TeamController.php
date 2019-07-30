@@ -10,7 +10,13 @@ use Validator;
 
 class TeamController extends Controller
 {
-    public function create(Request $request)
+    public function index()
+    {
+        $teams = Team::paginate(50);
+        return response(['success' => true, 'result' => $teams], 200);
+    }
+
+    public function store(Request $request)
     {
         $errors = $this->teamDataValidator($request->all())->errors();
         if(count($errors))
@@ -33,7 +39,7 @@ class TeamController extends Controller
         return response()->json(['success' => true, 'result' => $team]);
     }
 
-    public function read($team_id)
+    public function show($team_id)
     {
         $team = Team::find($team_id);
         if ($team == null)
@@ -42,13 +48,6 @@ class TeamController extends Controller
         $team->play->game;
         $team->players;
         return response()->json(['success' => true, 'result' => $team]);
-    }
-
-    public function readByPlay($play_id)
-    {
-        $teams = Team::where('play_id', '=', $play_id)->get();
-        foreach ($teams as $team) $team->players;
-        return response()->json(['success' => true, 'result' => $teams]);
     }
 
     public function update(Request $request, $team_id)
@@ -72,7 +71,7 @@ class TeamController extends Controller
         return response()->json(['success' => true, 'result' => $team]);
     }
 
-    public function delete($team_id)
+    public function destroy($team_id)
     {
         $team = Team::find($team_id);
         if ($team == null)
@@ -87,6 +86,13 @@ class TeamController extends Controller
         }
 
         return response()->json(['success' => true, 'result' => $team]);
+    }
+
+    public function showByPlay($play_id)
+    {
+        $teams = Team::where('play_id', '=', $play_id)->get();
+        foreach ($teams as $team) $team->players;
+        return response()->json(['success' => true, 'result' => $teams]);
     }
 
     protected function teamDataValidator(array $data)

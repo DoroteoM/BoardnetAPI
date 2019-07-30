@@ -10,11 +10,15 @@ use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
-    public function read ($username)
-    {
-        $user = User::where('username', $username)->first();
+    public function index (Request $request) {
+        $users = User::paginate(50);
+        return response()->json(['success' => true, 'result' => $users]);
+    }
+
+    public function show ($id) {
+        $user = User::find($id);
         if ($user == null)
-            return response()->json(['success' => false, 'result' => "User does not exist."]);
+            return response()->json(['success' => false, 'result' => $user], 404);
         return response()->json(['success' => true, 'result' => $user]);
     }
 
@@ -23,7 +27,7 @@ class UserController extends Controller
         $errors = $this->userDataValidator($request->all(), $user_id)->errors();
         if(count($errors))
         {
-            return response(['success' => false, 'result' => $errors], 200); //! Na 401 aplkacija ne cita uspjesno odgovor
+            return response(['success' => false, 'result' => $errors], 200);
         }
 
         $user = User::find($user_id);
@@ -37,7 +41,7 @@ class UserController extends Controller
         return response(['success' => true, 'result' => $user], 200);
     }
 
-    public function delete ($user_id)
+    public function destroy ($user_id)
     {
         $user = User::find($user_id);
 
@@ -66,6 +70,14 @@ class UserController extends Controller
         $user->delete();
 
         return response(['success' => true, 'result' => ['deleted' => $user->username]], 200);
+    }
+
+    public function showByUsername ($username)
+    {
+        $user = User::where('username', $username)->first();
+        if ($user == null)
+            return response()->json(['success' => false, 'result' => "User does not exist."]);
+        return response()->json(['success' => true, 'result' => $user]);
     }
 
     public function searchByUsername ($username)

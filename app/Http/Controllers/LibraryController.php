@@ -12,7 +12,13 @@ use Validator;
 
 class LibraryController extends Controller
 {
-    public function create(Request $request)
+    public function index()
+    {
+        $library = Library::paginate(50);
+        return response(['success' => true, 'result' => $library], 200);
+    }
+
+    public function store(Request $request)
     {
         $errors = $this->libraryDataValidator($request->all())->errors();
         if(count($errors))
@@ -42,7 +48,43 @@ class LibraryController extends Controller
         return response()->json(['success' => true, 'result' => $library]);
     }
 
-    public function readByUser($username)
+    public function show ($id) {
+        $library = Library::find($id);
+        if ($library == null)
+            return response()->json(['success' => false, 'result' => $library], 404);
+        return response()->json(['success' => true, 'result' => $library]);
+    }
+
+    public function update (Request $request, $library_id)
+    {
+        $errors = $this->dateDataValidator($request->all())->errors();
+        if(count($errors))
+        {
+            return response(['success' => false, 'result' => $errors], 200); //! Na 401 aplkacija ne cita uspjesno odgovor
+        }
+
+        $library = Library::find($library_id);
+        if ($library == null)
+            return response()->json(['success' => false, 'result' => "Library with this id does not exist."]);
+        $library->date_acquired = $request->get("date_acquired");
+        $library->save();
+
+        return response()->json(['success' => true, 'result' => $library]);
+    }
+
+    public function destroy($library_id)
+    {
+        $library = Library::find($library_id);
+        if ($library == null)
+            return response(['success' => false, 'result' => 'Library with this id does not exist.'], 200);
+        try {
+            $library->delete();
+        } catch (Exception $e) {
+        }
+        return response(['success' => true, 'result' => $library], 200);
+    }
+
+    public function showByUser($username)
     {
         $user = User::where('username','=',$username)->first();
         if ($user == null)
@@ -63,7 +105,7 @@ class LibraryController extends Controller
         return response(['success' => true, 'result' => $list], 200);
     }
 
-    public function readBygame($bgg_game_id)
+    public function showByBggId($bgg_game_id)
     {
         $game = Game::where('bgg_game_id','=',$bgg_game_id)->first();
         if ($game == null)
@@ -76,36 +118,7 @@ class LibraryController extends Controller
         return response(['success' => true, 'result' => $list], 200);
     }
 
-    public function update (Request $request, $library_id)
-    {
-        $errors = $this->dateDataValidator($request->all())->errors();
-        if(count($errors))
-        {
-            return response(['success' => false, 'result' => $errors], 200); //! Na 401 aplkacija ne cita uspjesno odgovor
-        }
-
-        $library = Library::find($library_id);
-        if ($library == null)
-            return response()->json(['success' => false, 'result' => "Library with this id does not exist."]);
-        $library->date_acquired = $request->get("date_acquired");
-        $library->save();
-
-        return response()->json(['success' => true, 'result' => $library]);
-    }
-
-    public function delete($library_id)
-    {
-        $library = Library::find($library_id);
-        if ($library == null)
-            return response(['success' => false, 'result' => 'Library with this id does not exist.'], 200);
-        try {
-            $library->delete();
-        } catch (Exception $e) {
-        }
-        return response(['success' => true, 'result' => $library], 200);
-    }
-
-    public function deleteByUserAndGame($username, $bgg_game_id)
+    public function destroyByUserAndGame($username, $bgg_game_id)
     {
         $user = User::where('username', '=', $username)->first();
         if ($user == null)
