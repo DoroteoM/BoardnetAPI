@@ -69,7 +69,7 @@ Route::group(['middleware' => ['api','cors']], function () {
     Route::put('play/{play_id}', 'PlayController@update')->where('play_id','[0-9]+');
     Route::delete('play/{play_id}', 'PlayController@destroy')->where('play_id','[0-9]+');
     Route::get('play/friends-not-in-play/{play_id}', 'PlayController@showFriendsNotInPlay')->where('play_id','[0-9]+');
-    Route::get('play/user/{play_id}', 'PlayController@showByUser')->where('play_id','[0-9]+');
+    Route::get('play/user/{username}', 'PlayController@showByUser');
 
     //team
     Route::get('users', 'UserController@index');

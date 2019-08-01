@@ -7,12 +7,17 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class UserController extends Controller
 {
-    public function index (Request $request) {
-        $users = User::paginate(50);
-        return response()->json(['success' => true, 'result' => $users]);
+
+    public function index () {
+            return response()->json(['success' => true, 'result' => $this->user]);
+
+
+//        $users = User::paginate(50);
+//        return response()->json(['success' => true, 'result' => $users]);
     }
 
     public function show ($id) {
