@@ -241,7 +241,7 @@ class GameController extends Controller
         }
     }
 
-    public function searchGames(String $name)
+    public function searchByName(String $name)
     {
         $games = Game::where('name', 'LIKE', '%' . $name . '%')->get();
         if ($games->isEmpty())
@@ -252,12 +252,13 @@ class GameController extends Controller
             $item->id = $game->id;
             $item->bgg_game_id = $game->bgg_game_id;
             $item->name = $game->name;
+            $item->thumbnail = $game->thumbnail;
             $list[] = $item->toArray();
         }
         return response(['success' => true, 'result' => $list], 200);
     }
 
-    public function searchLetter(String $letter)
+    public function searchByLetter(String $letter)
     {
         if (strlen($letter) != 1)
             return response(['success' => false, 'result' => "One letter expected"], 200);
@@ -270,6 +271,7 @@ class GameController extends Controller
             $item->id = $game->id;
             $item->bgg_game_id = $game->bgg_game_id;
             $item->name = $game->name;
+            $item->thumbnail = $game->thumbnail;
             $list[] = $item->toArray();
         }
         return response(['success' => true, 'result' => $list], 200);

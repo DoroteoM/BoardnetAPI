@@ -26,11 +26,17 @@ class PlayerController extends Controller
             return response(['success' => false, 'result' => $errors], 200); //! Na 401 aplkacija ne cita uspjesno odgovor
         }
 
-        if ($request->get('username') == null && $request->get('name') == null)
-            return response()->json(['success' => false, 'result' => "You must enter username or players name."]);
         $play = Play::find($request->get('play_id'));
         if ($play == null)
             return response()->json(['success' => false, 'result' => "Play does not exist."]);
+
+        $this->authenticateRequest();
+        $this->authorizeRequest($play->user->id);
+        if ($this->authMessage != null)
+            return response()->json(['success' => false, 'result' => $this->authMessage]);
+
+        if ($request->get('username') == null && $request->get('name') == null)
+            return response()->json(['success' => false, 'result' => "You must enter username or players name."]);
         $user = User::where('username', '=', $request->get('username'))->first();
         if ($request->get('username') && $user == null)
             return response()->json(['success' => false, 'result' => "User does not exist."]);
@@ -69,6 +75,10 @@ class PlayerController extends Controller
 
     public function show($player_id)
     {
+        $this->authenticateRequest();
+        if ($this->authMessage != null)
+            return response()->json(['success' => false, 'result' => $this->authMessage]);
+
         $player = Player::find($player_id);
         if ($player == null)
             return response()->json(['success' => false, 'result' => "Player does not exist."]);
@@ -90,6 +100,12 @@ class PlayerController extends Controller
         $player = Player::find($player_id);
         if ($player == null)
             return response()->json(['success' => false, 'result' => "Player does not exist."]);
+
+        $this->authenticateRequest();
+        $this->authorizeRequest($player->play->user->id);
+        if ($this->authMessage != null)
+            return response()->json(['success' => false, 'result' => $this->authMessage]);
+
         if ($request->get('username') == null && $request->get('name') == null)
             return response()->json(['success' => false, 'result' => "You must enter username or players name."]);
         $user = User::where('username', '=', $request->get('username'))->first();
@@ -127,6 +143,12 @@ class PlayerController extends Controller
         $player = Player::find($player_id);
         if ($player == null)
             return response(['success' => false, 'result' => 'Player with this id does not exist.'], 200);
+
+        $this->authenticateRequest();
+        $this->authorizeRequest($player->play->user->id);
+        if ($this->authMessage != null)
+            return response()->json(['success' => false, 'result' => $this->authMessage]);
+
         try {
             $player->delete();
         } catch (Exception $e) {

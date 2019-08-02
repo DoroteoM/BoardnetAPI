@@ -29,6 +29,12 @@ class LibraryController extends Controller
         $user = User::where('username', '=', $request->get("username"))->first();
         if ($user == null)
             return response()->json(['success' => false, 'result' => "User does not exist."]);
+
+        $this->authenticateRequest();
+        $this->authorizeRequest($user->id);
+        if ($this->authMessage != null)
+            return response()->json(['success' => false, 'result' => $this->authMessage]);
+
         $game = Game::where('bgg_game_id', '=', $request->get("bgg_game_id"))->first();
         if ($game == null)
             return response()->json(['success' => false, 'result' => "Game does not exist."]);
@@ -49,6 +55,10 @@ class LibraryController extends Controller
     }
 
     public function show ($id) {
+        $this->authenticateRequest();
+        if ($this->authMessage != null)
+            return response()->json(['success' => false, 'result' => $this->authMessage]);
+
         $library = Library::find($id);
         if ($library == null)
             return response()->json(['success' => false, 'result' => $library], 404);
@@ -66,6 +76,12 @@ class LibraryController extends Controller
         $library = Library::find($library_id);
         if ($library == null)
             return response()->json(['success' => false, 'result' => "Library with this id does not exist."]);
+
+        $this->authenticateRequest();
+        $this->authorizeRequest($library->user->id);
+        if ($this->authMessage != null)
+            return response()->json(['success' => false, 'result' => $this->authMessage]);
+
         $library->date_acquired = $request->get("date_acquired");
         $library->save();
 
@@ -77,6 +93,12 @@ class LibraryController extends Controller
         $library = Library::find($library_id);
         if ($library == null)
             return response(['success' => false, 'result' => 'Library with this id does not exist.'], 200);
+
+        $this->authenticateRequest();
+        $this->authorizeRequest($library->user->id);
+        if ($this->authMessage != null)
+            return response()->json(['success' => false, 'result' => $this->authMessage]);
+
         try {
             $library->delete();
         } catch (Exception $e) {
@@ -100,6 +122,7 @@ class LibraryController extends Controller
             $item->id = $game->id;
             $item->bgg_game_id = $game->bgg_game_id;
             $item->name = $game->name;
+            $item->thumbnail = $game->thumbnail;
             $list[] = $item->toArray();
         }
         return response(['success' => true, 'result' => $list], 200);
@@ -123,6 +146,12 @@ class LibraryController extends Controller
         $user = User::where('username', '=', $username)->first();
         if ($user == null)
             return response()->json(['success' => false, 'result' => "User does not exist."]);
+
+        $this->authenticateRequest();
+        $this->authorizeRequest($user->id);
+        if ($this->authMessage != null)
+            return response()->json(['success' => false, 'result' => $this->authMessage]);
+
         $game = Game::where('bgg_game_id', '=', $bgg_game_id)->first();
         if ($game == null)
             return response()->json(['success' => false, 'result' => "Game does not exist."]);

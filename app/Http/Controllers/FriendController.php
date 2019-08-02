@@ -6,6 +6,7 @@ use App\Models\Friend;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
+use Tymon\JWTAuth\Facades\JWTAuth;
 use Validator;
 
 class FriendController extends Controller
@@ -27,6 +28,12 @@ class FriendController extends Controller
         $user = User::where('username', '=', $request->get("username"))->first();
         if ($user == null)
             return response()->json(['success' => false, 'result' => "User does not exist."]);
+
+        $this->authenticateRequest();
+        $this->authorizeRequest($user->id);
+        if ($this->authMessage != null)
+            return response()->json(['success' => false, 'result' => $this->authMessage]);
+
         $friend = User::where('username', '=', $request->get("friend_username"))->first();
         if ($friend == null)
             return response()->json(['success' => false, 'result' => "Friend with this username does not exist."]);
@@ -48,22 +55,43 @@ class FriendController extends Controller
     }
 
     public function show ($id) {
-        $friend = Friend::find($id);
-        if ($friend == null)
-            return response()->json(['success' => false, 'result' => $friend], 404);
-        return response()->json(['success' => true, 'result' => $friend]);
+        $friendship = Friend::find($id);
+        if ($friendship == null)
+            return response()->json(['success' => false, 'result' => 'There is no friendship with this id'], 404);
+
+        $this->authenticateRequest();
+        $this->authorizeRequest($friendship->user->id);
+        if ($this->authMessage != null)
+            return response()->json(['success' => false, 'result' => $this->authMessage]);
+
+        return response()->json(['success' => true, 'result' => $friendship]);
     }
 
     public function update($id)
     {
+        $friendship = Friend::find($id);
+        if ($friendship == null)
+            return response()->json(['success' => false, 'result' => 'There is no friendship with this id'], 404);
+
+        $this->authenticateRequest();
+        $this->authorizeRequest($friendship->user->id);
+        if ($this->authMessage != null)
+            return response()->json(['success' => false, 'result' => $this->authMessage]);
+
         return response()->json(['success' => false, 'result' => 'I\'m not doing anything']);
     }
 
-    public function destroy($friends_id)
+    public function destroy($id)
     {
-        $friendship = Friend::find($friends_id);
+        $friendship = Friend::find($id);
         if ($friendship == null)
             return response(['success' => false, 'result' => 'There is no friendship with this id'], 200);
+
+        $this->authenticateRequest();
+        $this->authorizeRequest($friendship->user->id);
+        if ($this->authMessage != null)
+            return response()->json(['success' => false, 'result' => $this->authMessage]);
+
         try {
             $friendship->delete();
         } catch (Exception $e) {
@@ -124,6 +152,12 @@ class FriendController extends Controller
         $user = User::where('username', '=', $username)->first();
         if ($user == null)
             return response()->json(['success' => false, 'result' => "User does not exist."]);
+
+        $this->authenticateRequest();
+        $this->authorizeRequest($user->id);
+        if ($this->authMessage != null)
+            return response()->json(['success' => false, 'result' => $this->authMessage]);
+
         $friend = User::where('username', '=', $friend_username)->first();
         if ($user == null)
             return response()->json(['success' => false, 'result' => "Friend does not exist."]);

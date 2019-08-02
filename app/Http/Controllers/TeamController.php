@@ -28,6 +28,11 @@ class TeamController extends Controller
         if ($play == null)
             return response()->json(['success' => false, 'result' => "Play does not exist."]);
 
+        $this->authenticateRequest();
+        $this->authorizeRequest($play->user->id);
+        if ($this->authMessage != null)
+            return response()->json(['success' => false, 'result' => $this->authMessage]);
+
         $team = Team::create([
             'play_id' => $request->get('play_id'),
             'name' => $request->get('name'),
@@ -44,6 +49,10 @@ class TeamController extends Controller
         $team = Team::find($team_id);
         if ($team == null)
             return response()->json(['success' => false, 'result' => "Team does not exist."]);
+
+        $this->authenticateRequest();
+        if ($this->authMessage != null)
+            return response()->json(['success' => false, 'result' => $this->authMessage]);
 
         $team->play->game;
         $team->players;
@@ -62,6 +71,11 @@ class TeamController extends Controller
         if ($team == null)
             return response()->json(['success' => false, 'result' => "Team does not exist."]);
 
+        $this->authenticateRequest();
+        $this->authorizeRequest($team->play->user->id);
+        if ($this->authMessage != null)
+            return response()->json(['success' => false, 'result' => $this->authMessage]);
+
         $team->name = $request->get('name');
         $team->won = $request->get("won");
         $team->points = $request->get("points");
@@ -77,6 +91,11 @@ class TeamController extends Controller
         if ($team == null)
             return response(['success' => false, 'result' => 'Team with this id does not exist.'], 200);
 
+        $this->authenticateRequest();
+        $this->authorizeRequest($team->play->user->id);
+        if ($this->authMessage != null)
+            return response()->json(['success' => false, 'result' => $this->authMessage]);
+
         $players = $team->players;
         foreach ($players as $player) $player->delete();
 
@@ -90,9 +109,16 @@ class TeamController extends Controller
 
     public function showByPlay($play_id)
     {
-        $teams = Team::where('play_id', '=', $play_id)->get();
-        foreach ($teams as $team) $team->players;
-        return response()->json(['success' => true, 'result' => $teams]);
+        $play = Play::find($play_id);
+        if ($play == null)
+            return response()->json(['success' => false, 'result' => "Play does not exist."]);
+
+        $this->authenticateRequest();
+        if ($this->authMessage != null)
+            return response()->json(['success' => false, 'result' => $this->authMessage]);
+
+        foreach ($play->teams as $team) $team->players;
+        return response()->json(['success' => true, 'result' => $play->teams]);
     }
 
     protected function teamDataValidator(array $data)

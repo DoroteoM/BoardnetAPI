@@ -30,6 +30,12 @@ class PlayController extends Controller
         $user = User::where('username', '=', $request->get("username"))->first();
         if ($user == null)
             return response()->json(['success' => false, 'result' => "User does not exist."]);
+
+        $this->authenticateRequest();
+        $this->authorizeRequest($user->id);
+        if ($this->authMessage != null)
+            return response()->json(['success' => false, 'result' => $this->authMessage]);
+
         $game = Game::where('bgg_game_id', '=', $request->get("bgg_game_id"))->first();
         if ($game == null)
             return response()->json(['success' => false, 'result' => "Game does not exist."]);
@@ -48,6 +54,10 @@ class PlayController extends Controller
 
     public function show($play_id)
     {
+        $this->authenticateRequest();
+        if ($this->authMessage != null)
+            return response()->json(['success' => false, 'result' => $this->authMessage]);
+
         $play = Play::find($play_id);
         if ($play == null)
             return response()->json(['success' => false, 'result' => "Play does not exist."]);
@@ -79,6 +89,11 @@ class PlayController extends Controller
 
         $play = Play::find($play_id);
 
+        $this->authenticateRequest();
+        $this->authorizeRequest($play->user->id);
+        if ($this->authMessage != null)
+            return response()->json(['success' => false, 'result' => $this->authMessage]);
+
         $play->mode = $request->get('mode');
         $play->duration = $request->get('duration');
         $play->save();
@@ -91,6 +106,12 @@ class PlayController extends Controller
         $play = Play::find($play_id);
         if ($play == null)
             return response(['success' => false, 'result' => 'Play with this id does not exist.'], 200);
+
+        $this->authenticateRequest();
+        $this->authorizeRequest($play->user->id);
+        if ($this->authMessage != null)
+            return response()->json(['success' => false, 'result' => $this->authMessage]);
+
         try {
             $play->delete();
         } catch (Exception $e) {
@@ -104,6 +125,11 @@ class PlayController extends Controller
         $play = Play::find($play_id);
         if ($play == null)
             return response()->json(['success' => false, 'result' => "Play does not exist."]);
+
+        $this->authenticateRequest();
+        $this->authorizeRequest($play->user->id);
+        if ($this->authMessage != null)
+            return response()->json(['success' => false, 'result' => $this->authMessage]);
 
         $me = User::find($play->user_id);
 

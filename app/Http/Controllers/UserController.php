@@ -11,17 +11,17 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class UserController extends Controller
 {
-
     public function index () {
-            return response()->json(['success' => true, 'result' => $this->user]);
-
-
-//        $users = User::paginate(50);
-//        return response()->json(['success' => true, 'result' => $users]);
+        $users = User::paginate(50);
+        return response()->json(['success' => true, 'result' => $users]);
     }
 
-    public function show ($id) {
-        $user = User::find($id);
+    public function show ($user_id) {
+        $this->authenticateRequest();
+        if ($this->authMessage != null)
+            return response()->json(['success' => false, 'result' => $this->authMessage]);
+
+        $user = User::find($user_id);
         if ($user == null)
             return response()->json(['success' => false, 'result' => $user], 404);
         return response()->json(['success' => true, 'result' => $user]);
@@ -29,11 +29,14 @@ class UserController extends Controller
 
     public function update (Request $request, $user_id)
     {
-        $errors = $this->userDataValidator($request->all(), $user_id)->errors();
+        $errors = $this->userUpdateDataValidator($request->all(), $user_id)->errors();
         if(count($errors))
-        {
             return response(['success' => false, 'result' => $errors], 200);
-        }
+
+        $this->authenticateRequest();
+        $this->authorizeRequest($user_id);
+        if ($this->authMessage != null)
+            return response()->json(['success' => false, 'result' => $this->authMessage]);
 
         $user = User::find($user_id);
         $user->username = $request->get("username");
@@ -48,6 +51,11 @@ class UserController extends Controller
 
     public function destroy ($user_id)
     {
+        $this->authenticateRequest();
+        $this->authorizeRequest($user_id);
+        if ($this->authMessage != null)
+            return response()->json(['success' => false, 'result' => $this->authMessage]);
+
         $user = User::find($user_id);
 
         if ($user == null)
@@ -79,6 +87,10 @@ class UserController extends Controller
 
     public function showByUsername ($username)
     {
+        $this->authenticateRequest();
+        if ($this->authMessage != null)
+            return response()->json(['success' => false, 'result' => $this->authMessage]);
+
         $user = User::where('username', $username)->first();
         if ($user == null)
             return response()->json(['success' => false, 'result' => "User does not exist."]);
@@ -133,7 +145,7 @@ class UserController extends Controller
         return response(['success' => true, 'result' => $list], 200);
     }
 
-    protected function userDataValidator(array $data, $user_id)
+    protected function userUpdateDataValidator(array $data, $user_id)
     {
         return Validator::make($data, [
             'username' => 'required|string|max:255|unique:users,username,'.$user_id,
