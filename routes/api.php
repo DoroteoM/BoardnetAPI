@@ -64,7 +64,7 @@ Route::group(['middleware' => ['api', 'cors']], function () {
         Route::get('user/{username}', 'FriendController@showByUser');
         Route::get('friend/{friend_username}', 'FriendController@showByFriend');
         Route::get('are-friends/user/{username}/friend/{friend_username}', 'FriendController@areFriends');
-        Route::delete('user/{username}/friend/{friend_username}', 'FriendController@deleteByUserAndFriend');
+        Route::delete('user/{username}/friend/{friend_username}', 'FriendController@destroyByUserAndFriend');
     });
 
     Route::prefix('play')->group(function () {

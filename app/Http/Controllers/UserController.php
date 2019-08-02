@@ -23,22 +23,25 @@ class UserController extends Controller
 
         $user = User::find($user_id);
         if ($user == null)
-            return response()->json(['success' => false, 'result' => $user], 404);
+            return response()->json(['success' => false, 'result' => "There is no user with this id"], 404);
         return response()->json(['success' => true, 'result' => $user]);
     }
 
     public function update (Request $request, $user_id)
     {
+        $user = User::find($user_id);
+        if ($user == null)
+            return response(['success' => false, 'result' => "There is no user with this id."], 404);
+
+        $this->authenticateRequest();
+        $this->authorizeRequest($user_id);
+        if ($this->authStatusCode != null)
+            return response()->json(['success' => false, 'result' => $this->authMessage], $this->authStatusCode);
+
         $errors = $this->userUpdateDataValidator($request->all(), $user_id)->errors();
         if(count($errors))
             return response(['success' => false, 'result' => $errors], 200);
 
-        $this->authenticateRequest();
-        $this->authorizeRequest($user_id);
-        if ($this->authMessage != null)
-            return response()->json(['success' => false, 'result' => $this->authMessage]);
-
-        $user = User::find($user_id);
         $user->username = $request->get("username");
         $user->email = $request->get("email");
         $user->name = $request->get("name", null);

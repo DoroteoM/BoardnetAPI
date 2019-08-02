@@ -113,7 +113,7 @@ class LibraryController extends Controller
             return response()->json(['success' => false, 'result' => "User does not exist."]);
         $games = Game::whereHas('libraries', function ($query) use ($user) {
             $query->where('user_id', '=', $user->id);
-        })->get();
+        })->orderBy('name','asc')->get();
         if ($games->isEmpty())
             $list[] = null;
         foreach($games as $game)

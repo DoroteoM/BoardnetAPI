@@ -15,6 +15,7 @@ class Controller extends BaseController
 
     protected $loggedUser;
     protected $authMessage;
+    protected $authStatusCode;
     public function authenticateRequest()
     {
         try
@@ -24,12 +25,16 @@ class Controller extends BaseController
         catch (\Exception $exception)
         {
             $this->authMessage = $exception->getMessage();
+            $this->authStatusCode = 401;
         }
     }
 
     public function authorizeRequest($user_id)
     {
         if ($this->loggedUser != null && $this->loggedUser->id != $user_id)
+        {
             $this->authMessage = 'You can not execute action with this user';
+            $this->authStatusCode = 403;
+        }
     }
 }
