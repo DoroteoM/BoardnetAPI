@@ -25,17 +25,16 @@ class ApiAuthController extends Controller
 
         try {
             if (!$jwt = JWTAuth::attempt($credentials)) {
-                //return response()->json(['response' => 'Tu radi!']);
                 return response()->json([
                     'response' => 'error',
                     'message' => 'invalid_credentials',
-                ], 200); //! Na 401 aplkacija ne cita uspjesno odgovor
+                ], 401);
             }
         } catch (JWTAuthException $e) {
             return response()->json([
                 'response' => 'error',
                 'message' => 'failed_to_create_token',
-            ], 200); //! Na 500 aplkacija ne cita uspjesno odgovor
+            ], 500);
         }
         return response()->json([
             'response' => 'success',

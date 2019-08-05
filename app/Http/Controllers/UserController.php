@@ -54,15 +54,14 @@ class UserController extends Controller
 
     public function destroy ($user_id)
     {
+        $user = User::find($user_id);
+        if ($user == null)
+            return response(['success' => false, 'result' => "User does not exist"], 200);
+
         $this->authenticateRequest();
         $this->authorizeRequest($user_id);
         if ($this->authMessage != null)
             return response()->json(['success' => false, 'result' => $this->authMessage]);
-
-        $user = User::find($user_id);
-
-        if ($user == null)
-            return response(['success' => false, 'result' => "User does not exist"], 200);
 
         $libraries = $user->libraries;
         foreach ($libraries as $library) $library->delete();

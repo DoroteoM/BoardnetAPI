@@ -32,6 +32,9 @@ Route::group(['middleware' => ['api', 'cors']], function () {
     });
 
     Route::prefix('games')->group(function () {
+        Route::post('bgg/id/{bgg_game_id}', 'GameController@storeFromBggGame');
+        Route::post('bgg/library/{bgg_username}', 'GameController@storeFromBggLibrary');
+        Route::post('bgg/hotness', 'GameController@storeFromBggHotness');
         Route::get('', 'GameController@index');
         Route::get('{game_id}/{username?}', 'GameController@showByBggId')->where('game_id', '[0-9]+');
         Route::put('{game_id}', 'GameController@update')->where('game_id', '[0-9]+');
@@ -39,7 +42,6 @@ Route::group(['middleware' => ['api', 'cors']], function () {
         Route::get('{bgg_game_id}/{username?}', 'GameController@showByBggId')->where('bgg_game_id', '[0-9]+');
         Route::put('{bgg_game_id}', 'GameController@updateByBggId')->where('bgg_game_id', '[0-9]+');
         Route::delete('{bgg_game_id}', 'GameController@destroyByBggId')->where('bgg_game_id', '[0-9]+');
-        Route::post('bgg', 'GameController@storeFromLibrary');
         Route::get('search/name/{name}', 'GameController@searchByName');
         Route::get('search/letter/{letter}', 'GameController@searchByLetter');
     });
@@ -93,7 +95,8 @@ Route::group(['middleware' => ['api', 'cors']], function () {
         Route::put('{player_id}', 'PlayerController@update')->where('player_id', '[0-9]+');
         Route::delete('{player_id}', 'PlayerController@destroy')->where('player_id', '[0-9]+');
         Route::get('play/{play_id}', 'PlayerController@showByPlay')->where('play_id', '[0-9]+');
-        Route::get('team/{play_id}', 'PlayerController@showByTeam')->where('play_id', '[0-9]+');
+        Route::get('team/{team_id}', 'PlayerController@showByTeam')->where('team_id', '[0-9]+');
+        Route::get('user/{user_id}', 'PlayerController@showByUser')->where('user_id', '[0-9]+');
     });
 
     //test

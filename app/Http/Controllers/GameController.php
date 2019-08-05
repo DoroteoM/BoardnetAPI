@@ -204,7 +204,7 @@ class GameController extends Controller
         return response(['success' => true, 'result' => $game->name], 200);
     }
 
-    public function storeFromLibrary(Request $request)
+    public function storeFromBggLibrary(Request $request)
     {
         try
         {

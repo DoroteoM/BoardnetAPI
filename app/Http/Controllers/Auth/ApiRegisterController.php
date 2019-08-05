@@ -26,7 +26,7 @@ class ApiRegisterController extends RegisterController
 
         event(new Registered($user = $this->create($request->all())));
 
-        $this->guard()->login($user);
+        $this->guard('api')->login($user);
 
         return response(['success' => true, 'user' => $user]);
     }
