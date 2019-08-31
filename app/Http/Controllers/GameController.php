@@ -14,7 +14,7 @@ class GameController extends Controller
 {
     public function index()
     {
-        $games = Game::paginate(50);
+        $games = Game::orderBy('name','asc')->paginate(50);
         return response(['success' => true, 'result' => $games], 200);
     }
 

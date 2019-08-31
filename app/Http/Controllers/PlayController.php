@@ -148,7 +148,7 @@ class PlayController extends Controller
         $friendsNotInPlay = collect([]);
         foreach ($friends as $friend)
         {
-            if (!$players->contains($friend))
+            if (!$players->contains($friend) && $friend != null)
                 $friendsNotInPlay->push($friend);
         }
 

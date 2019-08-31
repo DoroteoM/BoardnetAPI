@@ -42,6 +42,15 @@ class ApiAuthController extends Controller
         ]);
     }
 
+    public function logout()
+    {
+        auth()->logout();
+
+        return response()->json([
+            'response' => 'success',
+            'message' => 'Successfully logged out']);
+    }
+
     public function getAuthUser(Request $request){
         $user = JWTAuth::toUser($request->token);
         return response()->json(['result' => $user]);

@@ -11,12 +11,14 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class UserController extends Controller
 {
-    public function index () {
+    public function index()
+    {
         $users = User::paginate(50);
         return response()->json(['success' => true, 'result' => $users]);
     }
 
-    public function show ($user_id) {
+    public function show($user_id)
+    {
         $this->authenticateRequest();
         if ($this->authMessage != null)
             return response()->json(['success' => false, 'result' => $this->authMessage]);
@@ -27,7 +29,7 @@ class UserController extends Controller
         return response()->json(['success' => true, 'result' => $user]);
     }
 
-    public function update (Request $request, $user_id)
+    public function update(Request $request, $user_id)
     {
         $user = User::find($user_id);
         if ($user == null)
@@ -39,7 +41,7 @@ class UserController extends Controller
             return response()->json(['success' => false, 'result' => $this->authMessage], $this->authStatusCode);
 
         $errors = $this->userUpdateDataValidator($request->all(), $user_id)->errors();
-        if(count($errors))
+        if (count($errors))
             return response(['success' => false, 'result' => $errors], 200);
 
         $user->username = $request->get("username");
@@ -52,7 +54,7 @@ class UserController extends Controller
         return response(['success' => true, 'result' => $user], 200);
     }
 
-    public function destroy ($user_id)
+    public function destroy($user_id)
     {
         $user = User::find($user_id);
         if ($user == null)
@@ -76,8 +78,7 @@ class UserController extends Controller
         foreach ($plays as $play) $play->delete();
 
         $players = $user->players;
-        foreach ($players as $player)
-        {
+        foreach ($players as $player) {
             $player->user_id = null;
             $player->save(); //TODO test this
         }
@@ -87,7 +88,7 @@ class UserController extends Controller
         return response(['success' => true, 'result' => ['deleted' => $user->username]], 200);
     }
 
-    public function showByUsername ($username)
+    public function showByUsername($username)
     {
         $this->authenticateRequest();
         if ($this->authMessage != null)
@@ -99,59 +100,37 @@ class UserController extends Controller
         return response()->json(['success' => true, 'result' => $user]);
     }
 
-    public function searchByUsername ($username)
+    public function searchByUsername($username)
     {
-        $users = User::where('username', 'LIKE', '%'.$username.'%')->get();
+        $users = User::select(['id', 'username', 'name', 'surname'])->where('username', 'LIKE', '%' . $username . '%')->get();
         if ($users->isEmpty())
             return response(['success' => true, 'result' => null], 200);
-        foreach($users as $user)
-        {
-            $item = new User;
-            $item->username = $user->username;
-            $item->name = $user->name;
-            $item->surname = $user->surname;
-            $list[] = $item->toArray();
-        }
-        return response(['success' => true, 'result' => $list], 200);
+        return response(['success' => true, 'result' => $users], 200);
     }
 
-    public function searchByName ($name)
+    public function searchByName($name)
     {
         $pieces = explode(" ", $name);
         $usersNameList = new Collection;
         $usersSurnameList = new Collection;
-        foreach ($pieces as $piece)
-        {
-            $usersName = User::where('name','LIKE', $piece.'%')->get();
-            if ($usersName->isNotEmpty())
-                $usersNameList = $usersNameList->merge($usersName);
-            $usersSurname = User::where('surname','LIKE', $piece.'%')->get();
-            if ($usersSurname->isNotEmpty())
-                $usersSurnameList = $usersSurnameList->merge($usersSurname);
+        foreach ($pieces as $piece) {
+            $usersName = User::select(['id', 'username', 'name', 'surname'])->where('name', 'LIKE', $piece . '%')->get();
+            $usersNameList = $usersNameList->merge($usersName);
+            $usersSurname = User::select(['id', 'username', 'name', 'surname'])->where('surname', 'LIKE', $piece . '%')->get();
+            $usersSurnameList = $usersSurnameList->merge($usersSurname);
         }
-        if (count($pieces) == 1)
-            $users = $usersNameList->merge($usersSurnameList);
-        else
-            $users = $usersNameList->intersect($usersSurnameList);
+        $users = $usersNameList->merge($usersSurnameList)->unique();
 
         if (!$users->count())
             return response(['success' => true, 'result' => null], 200);
-        foreach($users as $user)
-        {
-            $item = new User;
-            $item->username = $user->username;
-            $item->name = $user->name;
-            $item->surname = $user->surname;
-            $list[] = $item->toArray();
-        }
-        return response(['success' => true, 'result' => $list], 200);
+        return response(['success' => true, 'result' => $users], 200);
     }
 
     protected function userUpdateDataValidator(array $data, $user_id)
     {
         return Validator::make($data, [
-            'username' => 'required|string|max:255|unique:users,username,'.$user_id,
-            'email' => 'required|string|email|max:255|unique:users,email,'.$user_id,
+            'username' => 'required|string|max:255|unique:users,username,' . $user_id,
+            'email' => 'required|string|email|max:255|unique:users,email,' . $user_id,
             'date_of_birth' => 'date|date_format:Y-m-d|after:1900-01-01|before:today'
         ]);
     }
